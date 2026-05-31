@@ -129,15 +129,15 @@
                     <button onclick="switchEntryTab('wish')" id="entry-tab-wish" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">الأماني</button>
                 </div>
 
-                <!-- شريط السلوكيات (يظهر فقط في تبويب السلوكيات) -->
-                <div id="behaviorBars" class="relative pt-1 mb-4">
+                <!-- شريط السلوكيات (مخفي افتراضياً إذا لم يكن هناك سلوكيات) -->
+                <div id="behaviorBars" class="relative pt-1 mb-4 hidden">
                     <div class="w-full h-2 bg-black/40 rounded-full overflow-hidden flex shadow-inner backdrop-blur-sm border border-white/5">
                         <div id="greenBar" class="bg-emerald-500 h-full transition-all duration-500"></div>
                         <div id="redBar" class="bg-rose-500 h-full transition-all duration-500"></div>
                     </div>
                 </div>
 
-                <ul id="behaviorsList" class="space-y-2 max-h-56 overflow-y-auto pr-1 no-scrollbar"></ul>
+                <ul id="behaviorsList" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1 no-scrollbar"></ul>
             </div>
 
             <button onclick="openNoteModal()" class="w-full bg-white/5 border border-white/10 text-blue-300 py-4 rounded-3xl hover:bg-white/10 transition font-bold text-sm sm:text-base flex justify-center items-center gap-2 backdrop-blur-sm shadow-lg">
@@ -297,6 +297,7 @@
         </div>
     </div>
 
+    <!-- نافذة الملاحظات -->
     <div id="dailyNoteModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-md shadow-2xl border border-white/10 flex flex-col max-h-[90vh]">
             <h3 class="text-xl font-bold mb-4 border-b border-white/10 pb-2 text-blue-300"><i class="fa-solid fa-book-open"></i> ملاحظات اليوم</h3>
@@ -311,6 +312,7 @@
         </div>
     </div>
 
+    <!-- نافذة المعلومات المبسطة -->
     <div id="infoModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/10 text-center relative">
             <button onclick="closeInfoModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-rose-500 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
@@ -320,6 +322,7 @@
         </div>
     </div>
 
+    <!-- نافذة إنهاء الجلسة -->
     <div id="endSessionModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-md shadow-2xl border border-white/10 text-center">
             <div class="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 border border-rose-500/30">
@@ -334,6 +337,7 @@
         </div>
     </div>
 
+    <!-- نافذة السجل التاريخي اليومي -->
     <div id="dayDetailModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-end sm:items-center justify-center z-50 p-0 sm:p-4 transition-all">
         <div class="glass-card p-6 rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[85vh] flex flex-col shadow-2xl border border-white/10 relative">
             <button onclick="closeDayDetailModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-rose-500 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
@@ -342,6 +346,7 @@
         </div>
     </div>
 
+    <!-- نافذة تجميد العادات -->
     <div id="freezeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-md shadow-2xl border border-white/10 relative">
             <h3 class="text-lg font-bold mb-4 border-b border-white/10 pb-2 text-indigo-300"><i class="fa-solid fa-snowflake"></i> تجميد وتفعيل العادات</h3>
@@ -350,15 +355,19 @@
         </div>
     </div>
 
-    <!-- نافذة تصنيف الإدخال الجديد -->
+    <!-- نافذة تصنيف وتعديل الإدخال الجديد (السلوك، الفكرة، الأمنية) -->
     <div id="behaviorTypeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
-        <div class="glass-card p-6 rounded-3xl text-center shadow-2xl max-w-sm w-full border border-white/10">
-            <h3 class="text-lg font-bold mb-2">تصنيف التدوين</h3>
-            <p id="tempBehaviorText" class="text-gray-200 mb-4 italic break-words p-3 bg-black/30 rounded-xl text-sm border border-white/10"></p>
+        <div class="glass-card p-6 rounded-3xl text-center shadow-2xl max-w-sm w-full border border-white/10 max-h-[90vh] overflow-y-auto no-scrollbar">
+            <h3 id="behaviorModalTitle" class="text-lg font-bold mb-4 text-indigo-300">تصنيف التدوين</h3>
+            
+            <div class="mb-4 text-right">
+                <label class="block text-xs text-gray-400 mb-1">نص التدوين</label>
+                <input type="text" id="modalBehaviorText" class="w-full p-3 glass-input rounded-xl text-sm font-bold text-white mb-2">
+            </div>
             
             <div class="mb-4 text-right">
                 <label class="block text-xs text-gray-400 mb-1">شرح أو تعريف (اختياري)</label>
-                <textarea id="modalExplanation" class="w-full p-3 glass-input rounded-xl text-sm h-20" placeholder="اكتب تفاصيل أكثر، شرح للفكرة، أو دافع السلوك..."></textarea>
+                <textarea id="modalExplanation" class="w-full p-3 glass-input rounded-xl text-sm h-20 leading-relaxed" placeholder="اكتب تفاصيل أكثر، شرح للفكرة، أو دافع السلوك..."></textarea>
             </div>
 
             <div class="mb-4 text-right">
@@ -381,20 +390,18 @@
                 <button onclick="setTempMainType('behavior')" id="typeBtn-behavior" class="py-2 rounded-xl border border-indigo-500/50 bg-indigo-500/20 text-xs font-bold text-indigo-300 transition"><i class="fa-solid fa-person-running mb-1 block"></i> سلوك</button>
             </div>
 
-            <!-- أزرار الإيجابي/السلبي تظهر فقط إذا كان التصنيف سلوك -->
             <div id="behaviorSubTypes" class="flex gap-3 mt-2">
                 <button onclick="saveBehavior('positive')" class="flex-1 bg-emerald-500/80 text-white py-3 rounded-xl hover:bg-emerald-600 font-bold border border-emerald-400/50 text-sm"><i class="fa-solid fa-thumbs-up"></i> إيجابي</button>
                 <button onclick="saveBehavior('negative')" class="flex-1 bg-rose-500/80 text-white py-3 rounded-xl hover:bg-rose-600 font-bold border border-rose-400/50 text-sm"><i class="fa-solid fa-thumbs-down"></i> سلبي</button>
             </div>
             
-            <!-- زر الحفظ المباشر للأفكار والأماني -->
             <button id="saveNonBehaviorBtn" onclick="saveBehavior('none')" class="hidden w-full bg-indigo-600/80 text-white py-3 rounded-xl hover:bg-indigo-700 font-bold border border-indigo-400/50 text-sm mt-2">حفظ التدوين</button>
 
-            <button onclick="closeBehaviorModal()" class="mt-4 text-gray-400 hover:text-white text-sm font-bold">إلغاء</button>
+            <button onclick="closeBehaviorModal()" class="w-full mt-4 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 text-sm font-bold transition">إلغاء</button>
         </div>
     </div>
 
-    <!-- نافذة عرض تفاصيل العنصر (الشرح والمفضلة) -->
+    <!-- نافذة عرض تفاصيل العنصر مع التعديل والحذف المباشر -->
     <div id="itemDetailModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
         <div class="glass-card p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/10 relative">
             <button onclick="closeItemDetailModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-rose-500 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
@@ -410,9 +417,16 @@
                 <h4 class="text-[10px] text-gray-500 mb-1 font-bold">الشرح / التعريف:</h4>
                 <p id="detailExplanation" class="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap"></p>
             </div>
+
+            <!-- أزرار الإجراءات داخل نافذة التفاصيل -->
+            <div class="flex justify-center gap-3 mt-5 pt-5 border-t border-white/10">
+                <button id="detailEditBtn" class="flex-1 px-4 py-2 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold text-sm hover:bg-indigo-500/40 transition flex items-center justify-center gap-2"><i class="fa-solid fa-pen"></i> تعديل</button>
+                <button id="detailDeleteBtn" class="flex-1 px-4 py-2 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold text-sm hover:bg-rose-500/40 transition flex items-center justify-center gap-2"><i class="fa-solid fa-trash"></i> حذف</button>
+            </div>
         </div>
     </div>
 
+    <!-- نافذة إضافة العادات -->
     <div id="habitModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
         <div class="glass-card p-6 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-white/10 no-scrollbar">
             <h3 id="habitModalTitle" class="text-xl font-bold mb-4 border-b border-white/10 pb-2 text-indigo-300"><i class="fa-solid fa-wand-magic-sparkles"></i> إضافة عادة</h3>
@@ -541,13 +555,12 @@
             }
         });
 
-        let tempBehavior = '';
         let tempMainType = 'behavior';
         let currentEntryTab = 'behavior';
         let historyDays = [];
         let editingHabitId = null; 
+        let editingBehaviorId = null; // متغير لحفظ حالة التعديل للتدوين
 
-        // دالة الحفظ الفوري
         function saveData() { 
             localStorage.setItem('masteryProApp_data', JSON.stringify(data)); 
         }
@@ -728,7 +741,7 @@
         }
 
         // ==========================================
-        //  التدوين السريع (سلوكيات، أفكار، أماني)
+        //  التدوين السريع والفرز المطور (مع إضافة التعديل الكامل)
         // ==========================================
         function switchEntryTab(tab) {
             soundFX.tap();
@@ -741,7 +754,6 @@
                     btn.className = 'flex-1 py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition';
                 }
             });
-            document.getElementById('behaviorBars').style.display = (tab === 'behavior') ? 'block' : 'none';
             renderBehaviors();
         }
 
@@ -749,16 +761,44 @@
             const input = document.getElementById('behaviorInput');
             if(!input.value.trim()) return;
             soundFX.tap();
-            tempBehavior = input.value.trim();
-            document.getElementById('tempBehaviorText').innerText = `"${tempBehavior}"`;
+            editingBehaviorId = null; // إعادة تعيين في حالة كان هناك عملية تعديل سابقة
+            
+            document.getElementById('behaviorModalTitle').innerText = 'إضافة تدوين جديد';
+            document.getElementById('modalBehaviorText').value = input.value.trim();
             document.getElementById('modalExplanation').value = '';
-            setTempMainType('behavior'); // تهيئة النافذة
+            document.getElementById('modalBehaviorCategory').value = 'الجانب الشخصي';
+            
+            setTempMainType('behavior'); // تهيئة النافذة كـ سلوك افتراضياً
+            document.getElementById('behaviorTypeModal').classList.remove('hidden');
+        }
+
+        function editBehaviorBtn(id, event) {
+            if(event) event.stopPropagation();
+            soundFX.tap();
+            
+            const todayStr = new Date().toLocaleDateString('en-US');
+            const todayHistory = data.history.find(s => s.dateKey === todayStr);
+            let itemList = todayHistory ? (todayHistory.behaviors || []) : data.behaviors;
+            let item = itemList.find(b => b.id === id);
+            
+            if(!item) return;
+
+            editingBehaviorId = id; // تحديد العنصر المراد تعديله
+            
+            document.getElementById('behaviorModalTitle').innerText = 'تعديل التدوين';
+            document.getElementById('modalBehaviorText').value = item.text;
+            document.getElementById('modalExplanation').value = item.explanation || '';
+            document.getElementById('modalBehaviorCategory').value = item.category || 'الجانب الشخصي';
+            
+            setTempMainType(item.mainType || 'behavior');
+            
             document.getElementById('behaviorTypeModal').classList.remove('hidden');
         }
 
         function closeBehaviorModal() { 
             soundFX.tap(); 
             document.getElementById('behaviorTypeModal').classList.add('hidden'); 
+            editingBehaviorId = null; 
         }
 
         function setTempMainType(type) {
@@ -784,28 +824,48 @@
         }
         
         function saveBehavior(subType) {
+            const text = document.getElementById('modalBehaviorText').value.trim();
+            if(!text) return alert('النص مطلوب!');
+            
             const cat = document.getElementById('modalBehaviorCategory').value;
             const explanation = document.getElementById('modalExplanation').value.trim();
             
-            const newEntry = { 
-                id: Date.now(), 
-                text: tempBehavior, 
-                mainType: tempMainType, 
-                type: subType, 
-                category: cat, 
-                explanation: explanation,
-                isFavorite: false,
-                time: new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'}) 
-            };
-
             const todayStr = new Date().toLocaleDateString('en-US');
             const todayHistory = data.history.find(s => s.dateKey === todayStr);
-            if(todayHistory) {
-                if(!todayHistory.behaviors) todayHistory.behaviors = [];
-                todayHistory.behaviors.unshift(newEntry);
+            let targetList = todayHistory ? (todayHistory.behaviors || []) : data.behaviors;
+
+            if (editingBehaviorId) {
+                // وضع التعديل
+                let item = targetList.find(b => b.id === editingBehaviorId);
+                if (item) {
+                    item.text = text;
+                    item.mainType = tempMainType;
+                    // إذا كان فكرة/أمنية فسيرسل 'none'، فليبقِ النوع كما هو أو يتحدث حسب الحاجة.
+                    item.type = subType === 'none' ? item.type : subType; 
+                    item.category = cat;
+                    item.explanation = explanation;
+                }
             } else {
-                data.behaviors.unshift(newEntry);
+                // وضع الإضافة
+                const newEntry = { 
+                    id: Date.now(), 
+                    text: text, 
+                    mainType: tempMainType, 
+                    type: subType, 
+                    category: cat, 
+                    explanation: explanation,
+                    isFavorite: false,
+                    time: new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'}) 
+                };
+
+                if (todayHistory) {
+                    if (!todayHistory.behaviors) todayHistory.behaviors = [];
+                    todayHistory.behaviors.unshift(newEntry);
+                } else {
+                    data.behaviors.unshift(newEntry);
+                }
             }
+            
             saveData(); 
             document.getElementById('behaviorInput').value = ''; 
             closeBehaviorModal(); 
@@ -871,6 +931,16 @@
                 favBtn.innerHTML = '<i class="fa-regular fa-star text-gray-400"></i>';
             }
 
+            // تفعيل أزرار التعديل والحذف المباشرة من النافذة
+            document.getElementById('detailDeleteBtn').onclick = () => {
+                closeItemDetailModal();
+                deleteBehavior(id);
+            };
+            document.getElementById('detailEditBtn').onclick = () => {
+                closeItemDetailModal();
+                editBehaviorBtn(id);
+            };
+
             document.getElementById('itemDetailModal').classList.remove('hidden');
         }
 
@@ -910,35 +980,58 @@
                     ? '<i class="fa-solid fa-star text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]"></i>' 
                     : '<i class="fa-regular fa-star text-gray-500 hover:text-yellow-400 transition"></i>';
 
-                list.innerHTML += `<li onclick="openItemDetail(${b.id})" class="cursor-pointer p-3 rounded-xl flex justify-between items-center border-r-4 ${bgClass} border-l-0 border-t-0 border-b-0 ${borderClass} text-sm mb-2 glass-card hover:bg-white/10 transition group">
-                    <div class="flex-1 overflow-hidden whitespace-nowrap overflow-ellipsis flex items-center gap-2">
-                        <button onclick="toggleFavorite(${b.id}, event)" class="z-10 focus:outline-none">${favIcon}</button>
-                        <span class="font-bold">${escapeHTML(b.text)}</span> 
+                let explanationHtml = b.explanation 
+                    ? `<div class="w-full mt-2 pt-2 border-t border-white/5 text-[10px] text-gray-400 leading-relaxed line-clamp-2"><i class="fa-solid fa-align-right ml-1"></i>${escapeHTML(b.explanation)}</div>` 
+                    : '';
+
+                list.innerHTML += `<li onclick="openItemDetail(${b.id})" class="cursor-pointer p-3 rounded-xl flex flex-col border-r-4 ${bgClass} border-l-0 border-t-0 border-b-0 ${borderClass} text-sm mb-2 glass-card hover:bg-white/10 transition group">
+                    <div class="flex justify-between items-start w-full gap-2">
+                        <div class="flex-1 overflow-hidden">
+                            <div class="flex items-center gap-2 mb-1">
+                                <button onclick="toggleFavorite(${b.id}, event)" class="z-10 focus:outline-none shrink-0">${favIcon}</button>
+                                <span class="font-bold truncate w-full">${escapeHTML(b.text)}</span> 
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="text-[10px] text-gray-500 font-mono">${escapeHTML(b.time)}</span>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] text-gray-500 font-mono">${escapeHTML(b.time)}</span>
-                        <button onclick="deleteBehavior(${b.id}, event)" class="text-gray-500 hover:text-red-400 transition px-2 opacity-0 group-hover:opacity-100 z-10"><i class="fa-solid fa-trash"></i></button>
-                    </div>
+                    ${explanationHtml}
                 </li>`;
             });
 
+            // حساب شريط السلوكيات (إيجابي / سلبي)
             allItems.forEach(b => {
                 if ((b.mainType || 'behavior') === 'behavior') {
                     b.type === 'positive' ? p++ : n++;
                 }
             });
             const t = p + n;
-            const greenBar = document.getElementById('greenBar');
-            const redBar = document.getElementById('redBar');
-            if (greenBar && redBar) {
-                greenBar.style.width = t ? (p/t)*100 + '%' : '50%'; 
-                redBar.style.width = t ? (n/t)*100 + '%' : '50%';
+            const barContainer = document.getElementById('behaviorBars');
+            
+            // إخفاء الشريط تماماً إذا لم يكن هناك سلوكيات، أو إذا كنا في تبويب الأفكار/الأماني
+            if (currentEntryTab === 'behavior') {
+                if (t === 0) {
+                    if (barContainer) barContainer.style.display = 'none';
+                } else {
+                    if (barContainer) {
+                        barContainer.style.display = 'block';
+                        const greenBar = document.getElementById('greenBar');
+                        const redBar = document.getElementById('redBar');
+                        if (greenBar && redBar) {
+                            greenBar.style.width = (p/t)*100 + '%'; 
+                            redBar.style.width = (n/t)*100 + '%';
+                        }
+                    }
+                }
+            } else {
+                if (barContainer) barContainer.style.display = 'none';
             }
         }
         
         function deleteBehavior(id, event) { 
             if(event) event.stopPropagation();
-            if(!confirm('حذف هذا التدوين؟')) return;
+            if(!confirm('حذف هذا التدوين نهائياً؟')) return;
             const todayStr = new Date().toLocaleDateString('en-US');
             const todayHistory = data.history.find(s => s.dateKey === todayStr);
             if(todayHistory && todayHistory.behaviors) {
@@ -1392,7 +1485,6 @@
                 });
                 (s.behaviors||[]).forEach(b => {
                     let cat = b.category || 'الجانب الشخصي';
-                    // إضافة الأفكار والأماني بتأثير بسيط لتشجيع التدوين
                     if (b.mainType === 'idea' || b.mainType === 'wish') {
                         allEvents[cat].push({ type: 'pos', text: b.text, ts: b.id || sTs, impact: 2 });
                     } else {
@@ -1616,15 +1708,18 @@
                         borderClass = isPos ? 'border-r-emerald-500' : 'border-r-rose-500'; bgClass = isPos ? 'bg-emerald-500/10' : 'bg-rose-500/10'; iconHtml = isPos ? '<i class="fa-solid fa-thumbs-up text-emerald-400 mr-1"></i>' : '<i class="fa-solid fa-thumbs-down text-rose-400 mr-1"></i>';
                     }
                     
-                    contentEl.innerHTML += `<div class="p-3 rounded-xl border-r-4 ${borderClass} ${bgClass} mb-2 flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-xs">${iconHtml} ${escapeHTML(b.text)}</div>
-                            <div class="text-[10px] text-gray-400 mt-1">${escapeHTML(b.category || 'الجانب الشخصي')}</div>
+                    contentEl.innerHTML += `<div class="p-3 rounded-xl border-r-4 ${borderClass} ${bgClass} mb-2 flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-1">
+                            <div>
+                                <div class="font-bold text-xs">${iconHtml} ${escapeHTML(b.text)}</div>
+                                <div class="text-[10px] text-gray-400 mt-1">${escapeHTML(b.category || 'الجانب الشخصي')}</div>
+                            </div>
+                            <div class="flex flex-col items-end gap-1 shrink-0">
+                                ${b.isFavorite ? '<i class="fa-solid fa-star text-[10px] text-yellow-400"></i>' : ''}
+                                <span class="text-[10px] text-gray-400">${escapeHTML(b.time || '')}</span>
+                            </div>
                         </div>
-                        <div class="flex flex-col items-end gap-1">
-                            ${b.isFavorite ? '<i class="fa-solid fa-star text-[10px] text-yellow-400"></i>' : ''}
-                            <span class="text-[10px] text-gray-400">${escapeHTML(b.time || '')}</span>
-                        </div>
+                        ${b.explanation ? `<div class="mt-2 pt-2 border-t border-white/5 text-[10px] text-gray-300 leading-relaxed"><i class="fa-solid fa-align-right ml-1"></i>${escapeHTML(b.explanation)}</div>` : ''}
                     </div>`;
                 });
             }
@@ -1775,13 +1870,14 @@
         }
 
         // ==========================================
-        //  التصدير المدمج السريع للطباعة
+        //  التصدير المدمج السريع للطباعة وتحديث التدوينات
         // ==========================================
         function exportNativePrint() {
             const printArea = document.getElementById('printArea');
             const todayStr = new Date().toLocaleDateString('en-US');
             const todayHistory = data.history.find(s => s.dateKey === todayStr);
             const notes = todayHistory ? (todayHistory.dailyNotes || []) : data.dailyNotes;
+            const behaviors = todayHistory ? (todayHistory.behaviors || []) : data.behaviors;
             
             let notesHTML = '';
             if (notes.length === 0) {
@@ -1792,6 +1888,27 @@
                         <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;">
                             <span style="font-size: 11px; color: #6366f1; font-weight: bold; display: block; margin-bottom: 4px;">الـوقـت: ${escapeHTML(n.time)}</span>
                             <p style="margin: 0; font-size: 14px; color: #1e293b; line-height: 1.6;">${escapeHTML(n.text).replace(/\n/g, '<br>')}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            let behaviorsHTML = '';
+            if (behaviors.length === 0) {
+                behaviorsHTML = '<p style="color: #64748b; text-align: center; font-style: italic;">لا توجد تدوينات سريعة لهذا اليوم.</p>';
+            } else {
+                behaviors.forEach(b => {
+                    let typeText = b.mainType === 'idea' ? 'فكرة' : (b.mainType === 'wish' ? 'أمنية' : (b.type === 'positive' ? 'سلوك إيجابي' : 'سلوك سلبي'));
+                    let typeColor = b.mainType === 'idea' ? '#eab308' : (b.mainType === 'wish' ? '#a855f7' : (b.type === 'positive' ? '#10b981' : '#f43f5e'));
+
+                    behaviorsHTML += `
+                        <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <span style="font-size: 14px; font-weight: bold; color: #1e293b;">${escapeHTML(b.text)}</span>
+                                <span style="font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 1px solid ${typeColor}; color: ${typeColor};">${typeText}</span>
+                            </div>
+                            ${b.explanation ? `<p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.5;">الشرح: ${escapeHTML(b.explanation)}</p>` : ''}
+                            <span style="font-size: 10px; color: #94a3b8; display: block; margin-top: 4px;">الوقت: ${escapeHTML(b.time || '')} | الجانب: ${escapeHTML(b.category || '')}</span>
                         </div>
                     `;
                 });
@@ -1818,7 +1935,12 @@
                         </tr>
                     </table>
 
-                    <h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">ملاحظات اليوم وتدويناته:</h2>
+                    <h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">التدوينات السريعة:</h2>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 40px;">
+                        ${behaviorsHTML}
+                    </div>
+
+                    <h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">ملاحظات اليوم:</h2>
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">
                         ${notesHTML}
                     </div>
