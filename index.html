@@ -135,7 +135,6 @@
                 </div>
                 
                 <div class="flex gap-2 mb-4">
-                    <!-- تم ربط الحقل بقائمة الكلمات المفتاحية -->
                     <input type="text" id="behaviorInput" list="behaviorSuggestions" class="flex-1 p-3 glass-input rounded-xl text-sm" placeholder="سجل فكرة، احتياج، أو شعور...">
                     <datalist id="behaviorSuggestions"></datalist>
                     <button onclick="submitBehavior()" class="bg-indigo-500/80 text-white px-5 rounded-xl hover:bg-indigo-600 shadow-lg shadow-indigo-500/20 font-bold transition backdrop-blur-sm"><i class="fa-solid fa-paper-plane"></i></button>
@@ -182,22 +181,26 @@
         </div>
 
         <div id="statsView" class="hidden space-y-6 animate-fade-in">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-2">
-                <div onclick="openInfoModal('stat_days')" class="glass-card p-4 rounded-3xl text-center border-b-4 border-b-purple-500 cursor-pointer active:scale-95 transition-transform">
-                    <div class="text-2xl sm:text-3xl font-black text-purple-400 mb-1" id="stat-total-days">0</div>
-                    <div class="text-[10px] sm:text-xs text-gray-300 font-bold uppercase">أيام الإنجاز الكلية</div>
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-2">
+                <div onclick="openInfoModal('stat_days')" class="glass-card p-3 sm:p-4 rounded-3xl text-center border-b-4 border-b-purple-500 cursor-pointer active:scale-95 transition-transform">
+                    <div class="text-xl sm:text-3xl font-black text-purple-400 mb-1" id="stat-total-days">0</div>
+                    <div class="text-[9px] sm:text-[10px] text-gray-300 font-bold uppercase">أيام الإنجاز الكلية</div>
                 </div>
-                <div onclick="openInfoModal('stat_focus')" class="glass-card p-4 rounded-3xl text-center border-b-4 border-b-rose-500 cursor-pointer active:scale-95 transition-transform">
-                    <div class="text-2xl sm:text-3xl font-black text-rose-400 mb-1" id="stat-total-focus">0</div>
-                    <div class="text-[10px] sm:text-xs text-gray-300 font-bold uppercase">دقائق التركيز</div>
+                <div onclick="openInfoModal('stat_focus')" class="glass-card p-3 sm:p-4 rounded-3xl text-center border-b-4 border-b-rose-500 cursor-pointer active:scale-95 transition-transform">
+                    <div class="text-xl sm:text-3xl font-black text-rose-400 mb-1" id="stat-total-focus">0</div>
+                    <div class="text-[9px] sm:text-[10px] text-gray-300 font-bold uppercase">دقائق التركيز</div>
                 </div>
-                <div onclick="openInfoModal('stat_rate')" class="glass-card p-4 rounded-3xl text-center border-b-4 border-b-emerald-500 cursor-pointer active:scale-95 transition-transform">
-                    <div class="text-2xl sm:text-3xl font-black text-emerald-400 mb-1" id="stat-habit-rate">0%</div>
-                    <div class="text-[10px] sm:text-xs text-gray-300 font-bold uppercase">معدل الإنجاز التراكمي</div>
+                <div onclick="openInfoModal('stat_rate')" class="glass-card p-3 sm:p-4 rounded-3xl text-center border-b-4 border-b-emerald-500 cursor-pointer active:scale-95 transition-transform">
+                    <div class="text-xl sm:text-3xl font-black text-emerald-400 mb-1" id="stat-habit-rate">0%</div>
+                    <div class="text-[9px] sm:text-[10px] text-gray-300 font-bold uppercase">معدل الإنجاز التراكمي</div>
                 </div>
-                <div onclick="openInfoModal('stat_behavior')" class="glass-card p-4 rounded-3xl text-center border-b-4 border-b-blue-500 cursor-pointer active:scale-95 transition-transform">
-                    <div class="text-2xl sm:text-3xl font-black mb-1 flex items-center justify-center font-mono" id="stat-behavior-ratio">0/0</div>
-                    <div class="text-[10px] sm:text-xs text-gray-300 font-bold uppercase">سلوكيات (إيجابي/سلبي)</div>
+                <div onclick="openInfoModal('stat_behavior')" class="glass-card p-3 sm:p-4 rounded-3xl text-center border-b-4 border-b-blue-500 cursor-pointer active:scale-95 transition-transform">
+                    <div class="text-xl sm:text-3xl font-black mb-1 flex items-center justify-center font-mono" id="stat-behavior-ratio">0/0</div>
+                    <div class="text-[9px] sm:text-[10px] text-gray-300 font-bold uppercase">سلوكيات (إيجاب/سلب)</div>
+                </div>
+                <div onclick="openInfoModal('stat_resolved')" class="glass-card p-3 sm:p-4 rounded-3xl text-center border-b-4 border-b-orange-500 cursor-pointer active:scale-95 transition-transform col-span-2 lg:col-span-1">
+                    <div class="text-xl sm:text-3xl font-black mb-1 flex items-center justify-center font-mono" id="stat-resolved-ratio">0/0</div>
+                    <div class="text-[9px] sm:text-[10px] text-gray-300 font-bold uppercase">تسويات (نجاح/فشل)</div>
                 </div>
             </div>
 
@@ -264,6 +267,11 @@
             <div class="glass-card p-4 sm:p-6 rounded-3xl max-w-2xl mx-auto">
                 <h2 class="text-lg sm:text-xl font-bold mb-4 border-b border-white/10 pb-3"><i class="fa-solid fa-gear"></i> الإعدادات</h2>
                 <div class="space-y-4">
+                    <button onclick="simulateGoogleSync()" class="w-full p-3 rounded-2xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 transition font-bold text-sm text-right flex items-center justify-between shadow">
+                        <span><i class="fa-brands fa-google ml-1"></i> المزامنة مع حساب Google لحفظ التقدم</span>
+                        <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+                    </button>
+
                     <div class="flex justify-between items-center p-3 glass-card mb-2 rounded-xl border border-white/5">
                         <span class="font-bold text-sm text-indigo-200"><i class="fa-solid fa-calendar-days ml-1"></i> نوع التقويم</span>
                         <button onclick="toggleCalendar()" id="calendarBtn" class="text-xs px-4 py-2 rounded-lg font-bold border transition bg-indigo-500/20 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/40">ميلادي</button>
@@ -280,7 +288,7 @@
                             </label>
                         </div>
                     </div>
-                    <button onclick="exportNativePrint()" id="printExportBtn" class="w-full bg-purple-500/20 text-purple-300 border border-purple-500/30 py-3 rounded-2xl font-bold hover:bg-purple-500/30 transition text-sm flex justify-center items-center gap-2"><i class="fa-solid fa-print"></i> طباعة / حفظ PDF</button>
+                    <button onclick="openPrintModal()" class="w-full bg-purple-500/20 text-purple-300 border border-purple-500/30 py-3 rounded-2xl font-bold hover:bg-purple-500/30 transition text-sm flex justify-center items-center gap-2"><i class="fa-solid fa-print"></i> طباعة / حفظ PDF</button>
                     <div class="border-t border-white/10 pt-4">
                         <button onclick="resetAllData()" class="w-full p-3 rounded-2xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition font-bold text-sm"><i class="fa-solid fa-triangle-exclamation ml-1"></i> مسح جميع البيانات</button>
                     </div>
@@ -397,6 +405,32 @@
             <button onclick="closeFreezeModal()" class="w-full px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 font-bold transition text-sm active:scale-95">إغلاق</button>
         </div>
     </div>
+    
+    <!-- نافذة الطباعة -->
+    <div id="printOptionsModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[90] p-4 transition-all">
+        <div class="glass-card p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/10 relative animate-fade-in">
+            <button onclick="closePrintModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-rose-500 hover:text-white transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-lg font-bold mb-4 border-b border-white/10 pb-2 text-purple-300"><i class="fa-solid fa-print"></i> خيارات الطباعة</h3>
+            <p class="text-xs text-gray-400 mb-4">اختر الأقسام التي ترغب بتضمينها في تقرير الطباعة (سجل اليوم الحالي):</p>
+            
+            <div class="space-y-3 mb-6">
+                <label class="flex items-center gap-3 p-3 glass-card rounded-xl cursor-pointer hover:bg-white/5 transition">
+                    <input type="checkbox" id="printOptStats" checked class="w-5 h-5 rounded text-purple-600 bg-black/50 border-white/20 focus:ring-offset-gray-900">
+                    <span class="text-sm font-bold text-gray-200">الإحصائيات العامة</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 glass-card rounded-xl cursor-pointer hover:bg-white/5 transition">
+                    <input type="checkbox" id="printOptNotes" checked class="w-5 h-5 rounded text-purple-600 bg-black/50 border-white/20 focus:ring-offset-gray-900">
+                    <span class="text-sm font-bold text-gray-200">يوميات وتوثيقات اليوم</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 glass-card rounded-xl cursor-pointer hover:bg-white/5 transition">
+                    <input type="checkbox" id="printOptLog" checked class="w-5 h-5 rounded text-purple-600 bg-black/50 border-white/20 focus:ring-offset-gray-900">
+                    <span class="text-sm font-bold text-gray-200">التدوينات السريعة (سلوكيات، أفكار..)</span>
+                </label>
+            </div>
+            
+            <button onclick="executePrint()" class="w-full bg-purple-600/80 text-white px-5 py-3 rounded-xl hover:bg-purple-700 shadow-lg font-bold transition active:scale-95 flex items-center justify-center gap-2"><i class="fa-solid fa-file-pdf"></i> إصدار التقرير</button>
+        </div>
+    </div>
 
     <!-- Z-Index معدل إلى 90 ليكون فوق السجل الشامل -->
     <div id="behaviorTypeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[90] p-4">
@@ -477,7 +511,7 @@
     </div>
 
     <!-- نافذة العادات -->
-    <div id="habitModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+    <div id="habitModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
         <div class="glass-card p-6 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-white/10 no-scrollbar relative animate-fade-in">
             <h3 id="habitModalTitle" class="text-xl font-bold mb-4 border-b border-white/10 pb-2 text-indigo-300"><i class="fa-solid fa-wand-magic-sparkles"></i> إضافة عادة</h3>
             
@@ -618,7 +652,6 @@
             return h;
         }
 
-        // تحديث الكلمات المفتاحية
         function updateSuggestions() {
             const list = document.getElementById('behaviorSuggestions');
             if(!list) return;
@@ -634,14 +667,14 @@
             });
         }
 
-        // --- دوال الأنواع للتنسيقات ---
+        // --- دوال الأنواع للتنسيقات المحدثة ---
         function getTypeConfig(b) {
-            if (b.mainType === 'idea') return { text: 'فكرة', color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500', borderR: 'border-r-yellow-500', icon: 'fa-lightbulb', action: 'نُفذت' };
-            if (b.mainType === 'wish') return { text: 'أمنية', color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500', borderR: 'border-r-purple-500', icon: 'fa-wand-magic-sparkles', action: 'تحقق' };
-            if (b.mainType === 'need') return { text: 'احتياج', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500', borderR: 'border-r-orange-500', icon: 'fa-hands-holding', action: 'سُدد' };
-            if (b.mainType === 'emotion') return { text: 'شعور', color: 'text-pink-400', bg: 'bg-pink-500/10', border: 'border-pink-500', borderR: 'border-r-pink-500', icon: 'fa-face-smile-beam', action: null };
+            if (b.mainType === 'idea') return { text: 'فكرة', color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500', borderR: 'border-r-yellow-500', icon: 'fa-lightbulb', action: 'تنفيذ', success: 'تم التنفيذ', fail: 'فشل التنفيذ' };
+            if (b.mainType === 'wish') return { text: 'أمنية', color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500', borderR: 'border-r-purple-500', icon: 'fa-wand-magic-sparkles', action: 'تحقيق', success: 'تم التحقيق', fail: 'فشل التحقيق' };
+            if (b.mainType === 'need') return { text: 'احتياج', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500', borderR: 'border-r-orange-500', icon: 'fa-hands-holding', action: 'تسديد', success: 'تم التسديد', fail: 'فشل التسديد' };
+            if (b.mainType === 'emotion') return { text: 'شعور', color: 'text-pink-400', bg: 'bg-pink-500/10', border: 'border-pink-500', borderR: 'border-r-pink-500', icon: 'fa-face-smile-beam', action: 'معالجة', success: 'تمت المعالجة', fail: 'فشلت المعالجة' };
             if (b.type === 'positive') return { text: 'سلوك إيجابي', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500', borderR: 'border-r-emerald-500', icon: 'fa-thumbs-up', action: null };
-            return { text: 'سلوك سلبي', color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500', borderR: 'border-r-rose-500', icon: 'fa-thumbs-down', action: 'صُحح' };
+            return { text: 'سلوك سلبي', color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500', borderR: 'border-r-rose-500', icon: 'fa-thumbs-down', action: 'تصحيح', success: 'تم التصحيح', fail: 'فشل التصحيح' };
         }
 
         function findBehaviorAndSession(id) {
@@ -693,6 +726,7 @@
             'stat_focus': { title: 'دقائق التركيز', desc: 'إجمالي الدقائق التي قضيتها في جلسات العمل والتركيز العميق.', icon: 'fa-stopwatch', color: 'text-rose-400', bg: 'bg-rose-500/20', border: 'border-rose-500/30' },
             'stat_rate': { title: 'معدل الإنجاز التراكمي', desc: 'متوسط إنجاز العادات المكتملة مقارنة بالنشطة، شاملة الإنجازات السابقة.', icon: 'fa-chart-pie', color: 'text-emerald-400', bg: 'bg-emerald-500/20', border: 'border-emerald-500/30' },
             'stat_behavior': { title: 'التدوينات السريعة', desc: 'إجمالي السلوكيات والأفكار والأماني المسجلة.', icon: 'fa-scale-balanced', color: 'text-blue-400', bg: 'bg-blue-500/20', border: 'border-blue-500/30' },
+            'stat_resolved': { title: 'إحصائيات التسوية', desc: 'إجمالي عدد التدوينات التي تمت تسويتها بنجاح مقابل التي فشلت.', icon: 'fa-check-double', color: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/30' },
         };
 
         const aspectsConfig = {
@@ -772,7 +806,8 @@
         }
         function closeInfoModal() { soundFX.tap(); document.getElementById('infoModal').classList.add('hidden'); }
         
-        function showHabitNote(id) {
+        function showHabitNote(id, event) {
+            if(event) event.stopPropagation();
             soundFX.tap(); const h = data.habits.find(x => x.id === id); if(!h) return;
             let cat = aspectsConfig[h.category] ? h.category : 'الجانب الشخصي';
             const catConf = aspectsConfig[cat];
@@ -1033,35 +1068,41 @@
             });
         }
 
-        // --- المتابعة والتنفيذ ---
-        function resolveItem(id) {
-            soundFX.success();
+        // --- المتابعة والتنفيذ محدثة بنجاح وفشل مع السبب ---
+        function resolveItem(id, isSuccess) {
+            soundFX.click();
             let targetItem = null;
             for(let s of data.history) { let b = (s.behaviors||[]).find(x => x.id === id); if(b) { targetItem = b; break; } }
             if(targetItem) {
+                let reason = prompt('هل تود كتابة سبب (اختياري)؟') || '';
                 targetItem.isResolved = true;
+                targetItem.resolveStatus = isSuccess ? 'success' : 'failed';
+                targetItem.resolveReason = reason.trim();
                 targetItem.resolvedDate = new Date().toLocaleDateString('ar-SA', {year:'numeric', month:'short', day:'numeric'});
                 targetItem.resolvedTimestamp = Date.now();
-                saveData(); renderBehaviors();
+                saveData(); 
+                if(isSuccess) soundFX.success(); else soundFX.tap();
+                renderBehaviors();
                 if(!document.getElementById('trackingLogModal').classList.contains('hidden')) renderTrackingLog();
                 if(!document.getElementById('itemDetailModal').classList.contains('hidden')) openItemDetail(id);
-                if(!document.getElementById('statsView').classList.contains('hidden')) renderAspectsStats();
+                if(!document.getElementById('statsView').classList.contains('hidden')) { calculateStats(); renderAspectsStats(); }
             }
         }
 
-        // التراجع عن التسوية
         function unresolveItem(id) {
             soundFX.tap();
             let targetItem = null;
             for(let s of data.history) { let b = (s.behaviors||[]).find(x => x.id === id); if(b) { targetItem = b; break; } }
             if(targetItem) {
                 targetItem.isResolved = false;
+                targetItem.resolveStatus = null;
+                targetItem.resolveReason = null;
                 targetItem.resolvedDate = null;
                 targetItem.resolvedTimestamp = null;
                 saveData(); renderBehaviors();
                 if(!document.getElementById('trackingLogModal').classList.contains('hidden')) renderTrackingLog();
                 if(!document.getElementById('itemDetailModal').classList.contains('hidden')) openItemDetail(id);
-                if(!document.getElementById('statsView').classList.contains('hidden')) renderAspectsStats();
+                if(!document.getElementById('statsView').classList.contains('hidden')) { calculateStats(); renderAspectsStats(); }
             }
         }
 
@@ -1091,13 +1132,21 @@
                 let actionHtml = '';
                 
                 if(conf.action) {
-                    if(b.isResolved) actionHtml = `<span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20"><i class="fa-solid fa-check"></i> ${conf.action} (${escapeHTML(b.resolvedDate)})</span>`;
-                    else actionHtml = `<button onclick="resolveItem(${b.id}); event.stopPropagation();" class="text-[10px] bg-white/5 border border-white/10 hover:bg-white/10 transition px-2 py-1 rounded text-gray-300 shadow"><i class="fa-regular fa-circle"></i> تحديد: ${conf.action}</button>`;
+                    if(b.isResolved) {
+                        let isSuc = b.resolveStatus === 'success';
+                        let statColor = isSuc ? 'emerald' : 'rose';
+                        let statText = isSuc ? conf.success : conf.fail;
+                        let statIcon = isSuc ? 'fa-check' : 'fa-xmark';
+                        actionHtml = `<div class="text-left"><span class="text-[10px] text-${statColor}-400 bg-${statColor}-500/10 px-2 py-1 rounded border border-${statColor}-500/20"><i class="fa-solid ${statIcon}"></i> ${statText}</span></div>`;
+                    } else {
+                        actionHtml = `<div class="flex gap-1 justify-end"><button onclick="resolveItem(${b.id}, true); event.stopPropagation();" class="text-[10px] bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition px-2 py-1 rounded text-emerald-400 shadow"><i class="fa-solid fa-check"></i> تم</button><button onclick="resolveItem(${b.id}, false); event.stopPropagation();" class="text-[10px] bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/20 transition px-2 py-1 rounded text-rose-400 shadow"><i class="fa-solid fa-xmark"></i> فشل</button></div>`;
+                    }
                 }
 
                 list.innerHTML += `<div onclick="openItemDetail(${b.id})" class="p-3 glass-card rounded-xl border-r-4 ${conf.borderR} border-t-0 border-b-0 border-l-0 mb-3 cursor-pointer hover:bg-white/5 transition flex flex-col gap-2 relative">
                     <div class="flex justify-between items-start"><div class="font-bold text-xs ${conf.color} flex items-center gap-1.5"><i class="fa-solid ${conf.icon}"></i> ${escapeHTML(conf.text)}</div><div class="z-10 relative">${actionHtml}</div></div>
                     <div class="text-sm text-gray-200 line-clamp-2">${escapeHTML(b.text)}</div>
+                    ${b.resolveReason ? `<div class="text-[10px] text-gray-400 border-r-2 border-gray-500 pr-2 mt-1 truncate">السبب: ${escapeHTML(b.resolveReason)}</div>` : ''}
                     <div class="flex justify-between items-center text-[9px] text-gray-500 pt-2 border-t border-white/5 mt-1"><span><i class="fa-regular fa-calendar ml-1"></i>تاريخ الطرح: ${cDate}</span><span>${escapeHTML(b.category || 'الجانب الشخصي')}</span></div>
                 </div>`;
             });
@@ -1154,6 +1203,8 @@
                     time: new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'}),
                     createdDate: new Date().toLocaleDateString('ar-SA', {year: 'numeric', month: 'long', day: 'numeric'}),
                     isResolved: false,
+                    resolveStatus: null,
+                    resolveReason: null,
                     resolvedDate: null,
                     resolvedTimestamp: null
                 };
@@ -1192,11 +1243,21 @@
             const actionArea = document.getElementById('detailActionArea');
             if(conf.action) {
                 if(item.isResolved) {
-                    actionArea.innerHTML = `<div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-2.5 rounded-xl text-center text-xs font-bold mx-auto w-[90%] mb-2"><i class="fa-solid fa-check-circle"></i> الحالة: ${conf.action} <br><span class="text-[10px] text-gray-400 mt-1 block">تاريخ التنفيذ: ${escapeHTML(item.resolvedDate)}</span></div>
+                    let isSuc = item.resolveStatus === 'success';
+                    let statColor = isSuc ? 'emerald' : 'rose';
+                    let statText = isSuc ? conf.success : conf.fail;
+                    let statIcon = isSuc ? 'fa-check-circle' : 'fa-circle-xmark';
+                    let reasonHtml = item.resolveReason ? `<div class="text-[10px] text-gray-300 mt-2 p-2 bg-black/30 rounded border border-white/5"><i class="fa-solid fa-quote-right ml-1 opacity-50"></i>السبب: ${escapeHTML(item.resolveReason)}</div>` : '';
+                    
+                    actionArea.innerHTML = `<div class="bg-${statColor}-500/10 border border-${statColor}-500/20 text-${statColor}-400 p-2.5 rounded-xl text-center text-xs font-bold mx-auto w-[90%] mb-2"><i class="fa-solid ${statIcon}"></i> الحالة: ${statText} <br><span class="text-[10px] text-gray-400 mt-1 block">تاريخ التسوية: ${escapeHTML(item.resolvedDate)}</span>${reasonHtml}</div>
                     <button onclick="unresolveItem(${item.id})" class="w-[90%] mx-auto block bg-gray-500/20 border border-gray-500/50 text-gray-400 py-2 rounded-xl text-xs font-bold hover:bg-gray-500/30 active:scale-95 transition shadow"><i class="fa-solid fa-rotate-left"></i> تراجع عن التسوية</button>`;
                 } else {
                     let colorKey = conf.color.split('-')[1];
-                    actionArea.innerHTML = `<button onclick="resolveItem(${item.id})" class="w-[90%] mx-auto block bg-${colorKey}-500/20 border border-${colorKey}-500/50 text-${colorKey}-400 py-2.5 rounded-xl text-sm font-bold hover:bg-${colorKey}-500/30 active:scale-95 transition shadow"><i class="fa-solid fa-check"></i> تحديد كـ (${conf.action})</button>`;
+                    actionArea.innerHTML = `
+                    <div class="flex gap-2 justify-center w-[90%] mx-auto">
+                        <button onclick="resolveItem(${item.id}, true)" class="flex-1 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 py-2.5 rounded-xl text-sm font-bold hover:bg-emerald-500/30 active:scale-95 transition shadow"><i class="fa-solid fa-check"></i> ${conf.success}</button>
+                        <button onclick="resolveItem(${item.id}, false)" class="flex-1 bg-rose-500/20 border border-rose-500/50 text-rose-400 py-2.5 rounded-xl text-sm font-bold hover:bg-rose-500/30 active:scale-95 transition shadow"><i class="fa-solid fa-xmark"></i> ${conf.fail}</button>
+                    </div>`;
                 }
             } else { actionArea.innerHTML = ''; }
             
@@ -1217,7 +1278,13 @@
             filteredItems.forEach(b => {
                 let conf = getTypeConfig(b);
                 const favIcon = b.isFavorite ? '<i class="fa-solid fa-star text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]"></i>' : '<i class="fa-regular fa-star text-gray-500 hover:text-yellow-400 transition"></i>';
-                let statusIcon = b.isResolved ? `<i class="fa-solid fa-check-circle text-emerald-400 ml-1 text-[10px]" title="${conf.action}"></i>` : '';
+                
+                let statusIcon = '';
+                if(b.isResolved) {
+                    if(b.resolveStatus === 'success') statusIcon = `<i class="fa-solid fa-check-circle text-emerald-400 ml-1 text-[10px]" title="${conf.success}"></i>`;
+                    else statusIcon = `<i class="fa-solid fa-circle-xmark text-rose-400 ml-1 text-[10px]" title="${conf.fail}"></i>`;
+                }
+
                 list.innerHTML += `<li onclick="openItemDetail(${b.id})" class="cursor-pointer p-3 rounded-xl flex flex-col border-r-4 ${conf.bg} border-l-0 border-t-0 border-b-0 ${conf.borderR} text-sm mb-2 glass-card hover:bg-white/10 transition group active:scale-95"><div class="flex justify-between items-start w-full gap-2"><div class="flex-1 overflow-hidden"><div class="flex items-center gap-2 mb-1"><button onclick="toggleFavorite(${b.id}, event)" class="z-10 focus:outline-none shrink-0">${favIcon}</button><span class="font-bold truncate w-full ${b.isResolved ? 'text-gray-400' : ''}">${statusIcon} ${escapeHTML(b.text)}</span></div></div><div class="flex items-center gap-2 shrink-0"><span class="text-[10px] text-gray-500 font-mono">${escapeHTML(b.time)}</span></div></div></li>`;
             });
 
@@ -1342,13 +1409,19 @@
             const category = document.getElementById('habitCategory').value;
             const type = document.getElementById('habitType').value;
             
+            let oldHabit = editingHabitId ? data.habits.find(x => x.id === editingHabitId) : null;
             let hData = { id: editingHabitId ? editingHabitId : Date.now(), name, description, startDate, category, type, isFrozen: false, pastAchievements: [] };
             
             if(type === 'levels') {
                 hData.levels = [ document.getElementById('level1').value.trim() || 'المستوى 1', document.getElementById('level2').value.trim() || 'المستوى 2', document.getElementById('level3').value.trim() || 'المستوى 3' ];
             } else if(type === 'multiple') {
                 const inputs = document.querySelectorAll('.habit-option'); hData.options = [];
-                inputs.forEach((inp, idx) => { if(inp.value.trim()) hData.options.push({id: idx, text: inp.value.trim(), checked: false}); });
+                inputs.forEach((inp, idx) => { 
+                    if(inp.value.trim()) {
+                        let oldChecked = (oldHabit && oldHabit.options && oldHabit.options[idx]) ? oldHabit.options[idx].checked : false;
+                        hData.options.push({id: idx, text: inp.value.trim(), checked: oldChecked}); 
+                    }
+                });
                 if(hData.options.length === 0) hData.options.push({id: 0, text: 'مهمة 1', checked: false});
             } else if(type === 'chain') {
                 const inputs = document.querySelectorAll('.chain-option'); hData.chainSteps = [];
@@ -1359,6 +1432,21 @@
             if (editingHabitId) { 
                 const index = data.habits.findIndex(x => x.id === editingHabitId); 
                 if (index !== -1) { hData.isFrozen = data.habits[index].isFrozen; hData.pastAchievements = data.habits[index].pastAchievements || []; data.habits[index] = hData; } 
+                // تحديث الحالة النشطة للعادة إن وجدت لضمان بقاء المؤشرات صحيحة
+                const activeHistory = data.history.find(s => s.dateKey === getActiveDateKey());
+                if (activeHistory && activeHistory.habits) {
+                    let st = activeHistory.habits.find(h => h.id === editingHabitId);
+                    if (st) {
+                        st.name = hData.name; st.type = hData.type; st.category = hData.category;
+                        if(st.type === 'multiple') {
+                            let newOpts = [];
+                            hData.options.forEach(o => { let existing = st.options ? st.options.find(ex => ex.id === o.id) : null; newOpts.push({id: o.id, text: o.text, checked: existing ? existing.checked : false}); });
+                            st.options = newOpts;
+                        } else if (st.type === 'chain') {
+                            if(st.currentStepIndex >= hData.chainSteps.length) st.currentStepIndex = hData.chainSteps.length - 1;
+                        }
+                    }
+                }
             } else { data.habits.unshift(hData); }
             saveData(); closeHabitModal(); renderHabits(); soundFX.success();
         }
@@ -1385,12 +1473,11 @@
                 <div class="flex justify-between items-start mb-4 relative z-10">
                     <div class="flex flex-col gap-1.5 w-[80%]">
                         <div class="flex items-center gap-2">
-                            <h4 class="font-bold text-sm ${isCompleted ? 'text-emerald-300' : 'text-gray-100'} transition-colors flex items-center gap-1.5">
+                            <h4 onclick="showHabitNote(${hGlobal.id}, event)" class="font-bold text-sm ${isCompleted ? 'text-emerald-300' : 'text-gray-100'} transition-colors flex items-center gap-1.5 cursor-pointer hover:underline decoration-white/30 decoration-dashed underline-offset-4">
                                 ${isCompleted ? `<i class="fa-solid fa-circle-check text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"></i>` : ''}
                                 ${escapeHTML(hGlobal.name)}
                             </h4>
                         </div>
-                        ${hGlobal.description ? `<button onclick="showHabitNote(${hGlobal.id})" class="text-[10px] text-indigo-300 text-right mt-1 hover:text-indigo-200 truncate flex items-center gap-1 w-fit"><i class="fa-solid fa-circle-info"></i> عرض الشرح</button>` : ''}
                     </div>
                     <div class="flex items-center gap-3 shrink-0">
                         <button onclick="openHabitModal(${hGlobal.id})" class="text-gray-500 hover:text-blue-400 transition text-sm active:scale-90 bg-white/5 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10" title="تعديل"><i class="fa-solid fa-pen-to-square text-xs"></i></button>
@@ -1433,11 +1520,22 @@
         }
 
         function renderHabits() {
+            // حفظ موضع التمرير الأفقي
+            const scrollContainers = document.querySelectorAll('.habits-scroll-container');
+            let scrolls = [];
+            scrollContainers.forEach(c => scrolls.push(c.scrollLeft));
+
             const container = document.getElementById('habitsList'); container.innerHTML = '';
             const activeHabits = data.habits.filter(h => !h.isFrozen);
             if(!activeHabits.length) return container.innerHTML = `<p class="text-center text-gray-500 py-4">لا توجد عادات نشطة. أضف عادة لتبدأ.</p>`;
             let grouped = {}; activeHabits.forEach(h => { let cat = aspectsConfig[h.category] ? h.category : 'الجانب الشخصي'; if(!grouped[cat]) grouped[cat] = []; grouped[cat].push(h); });
             for(let cat in grouped) { let conf = aspectsConfig[cat] || aspectsConfig['الجانب الشخصي']; let folderHtml = `<div class="${conf.bg} border ${conf.border} p-4 rounded-3xl mb-4 border-r-4"><h3 class="font-bold ${conf.color} mb-4 flex items-center gap-2"><i class="fa-solid ${conf.icon}"></i> ${escapeHTML(cat)}</h3><div class="habits-scroll-container no-scrollbar">`; grouped[cat].forEach(h => { folderHtml += getHabitCardHTML(h); }); container.innerHTML += folderHtml + `</div></div>`; }
+
+            // استعادة موضع التمرير
+            setTimeout(() => {
+                const newContainers = document.querySelectorAll('.habits-scroll-container');
+                newContainers.forEach((c, i) => { if(scrolls[i] !== undefined) c.scrollLeft = scrolls[i]; });
+            }, 0);
         }
 
         function openFreezeModal() {
@@ -1456,13 +1554,23 @@
             let totalDays = activeDaysCount.size;
             
             let p = 0, n = 0, tf = 0, ch = 0;
-            data.history.forEach(s => { (s.behaviors||[]).forEach(b => { if((b.mainType || 'behavior') === 'behavior') { b.type === 'positive' ? p++ : n++; } }); });
+            let successRes = 0, failedRes = 0;
+            data.history.forEach(s => { 
+                (s.behaviors||[]).forEach(b => { 
+                    if((b.mainType || 'behavior') === 'behavior') { b.type === 'positive' ? p++ : n++; }
+                    if(b.isResolved) {
+                        b.resolveStatus === 'success' ? successRes++ : failedRes++;
+                    }
+                }); 
+            });
             data.habits.forEach(h => { if (h.pastAchievements && h.pastAchievements.length > 0) { ch += h.pastAchievements.length; } });
             
             let th = totalDays * data.habits.filter(h => !h.isFrozen).length; if(th < ch) th = ch;
             document.getElementById('stat-total-days').innerText = totalDays;
             document.getElementById('stat-habit-rate').innerText = th ? Math.round((ch/th)*100) + '%' : '0%';
             document.getElementById('stat-behavior-ratio').innerHTML = `<span class="text-emerald-400 drop-shadow">${p}</span><span class="text-gray-500 mx-1 font-sans">/</span><span class="text-rose-400 drop-shadow">${n}</span>`;
+            document.getElementById('stat-resolved-ratio').innerHTML = `<span class="text-emerald-400 drop-shadow">${successRes}</span><span class="text-gray-500 mx-1 font-sans">/</span><span class="text-rose-400 drop-shadow">${failedRes}</span>`;
+            
             if(data.focusSessions) data.focusSessions.forEach(s => { if(s.type !== 'راحة') tf += s.duration; });
             document.getElementById('stat-total-focus').innerText = tf;
         }
@@ -1484,10 +1592,11 @@
 
                     // تأثير التسوية والتنفيذ
                     if (b.isResolved) {
+                        let conf = getTypeConfig(b);
                         let rTs = b.resolvedTimestamp || (b.id || sTs) + 1000;
-                        let actionText = getTypeConfig(b).action || 'تسوية';
-                        let resImpact = b.mainType === 'behavior' ? 10 : 5; // تصحيح سلوك سلبي +10، تحقيق أمنية/احتياج +5
-                        addEventSafe(b.category, { type: 'pos', text: `${actionText}: ${b.text}`, ts: rTs, impact: resImpact });
+                        let actionText = b.resolveStatus === 'success' ? conf.success : conf.fail;
+                        let resImpact = b.resolveStatus === 'success' ? (b.mainType === 'behavior' ? 10 : 5) : -5;
+                        addEventSafe(b.category, { type: b.resolveStatus === 'success' ? 'pos' : 'neg', text: `${actionText}: ${b.text}`, ts: rTs, impact: resImpact });
                     }
                 });
             });
@@ -1504,7 +1613,7 @@
                     <div class="flex justify-between items-center mb-3"><span class="font-bold text-sm flex items-center gap-2 ${conf.color}"><i class="fa-solid ${conf.icon}"></i> ${escapeHTML(cat)}</span><div class="flex items-center gap-2"><span class="text-[10px] bg-black/40 border border-white/5 px-2 py-1 rounded-lg text-gray-300">مستوى ${level}</span><span class="text-xs font-mono font-bold text-indigo-300 w-8 text-left">${currentPct}%</span></div></div>
                     <div class="w-full bg-black/40 rounded-full h-3 flex overflow-hidden shadow-inner relative border border-white/5">`;
                 if(displayEvents.length === 0) { html += `<div class="w-full bg-gray-800/30"></div>`; } else { displayEvents.forEach(ev => { let color = ev.type === 'habit' ? 'bg-blue-500' : ev.type === 'focus' ? 'bg-purple-500' : ev.type === 'pos' ? 'bg-emerald-500' : 'bg-rose-500'; let w = Math.abs(ev.impact); html += `<div style="width: ${w}%" class="${color} border-r border-black/30" title="${escapeHTML(ev.text)} (${ev.impact > 0 ? '+'+ev.impact : ev.impact}%)"></div>`; }); }
-                html += `</div><div class="flex justify-between mt-2 text-[8px] text-gray-500"><span>أحدث التأثيرات الزمنية</span><span class="flex gap-1.5 font-bold"><span class="text-rose-400/80">سلبي -5%</span><span class="text-emerald-400/80">إنجاز وتسوية</span><span class="text-purple-400/80">تركيز +10%</span><span class="text-blue-400/80">عادة +15%</span></span></div></div>`;
+                html += `</div><div class="flex justify-between mt-2 text-[8px] text-gray-500"><span>أحدث التأثيرات الزمنية</span><span class="flex gap-1.5 font-bold"><span class="text-rose-400/80">فشل/سلبي -5%</span><span class="text-emerald-400/80">إنجاز/نجاح</span><span class="text-purple-400/80">تركيز +10%</span><span class="text-blue-400/80">عادة +15%</span></span></div></div>`;
                 container.innerHTML += html;
             }
         }
@@ -1568,9 +1677,10 @@
                         if (b.isResolved) {
                             let rDateKey = b.resolvedTimestamp ? new Date(b.resolvedTimestamp).toLocaleDateString('en-US') : null;
                             if (rDateKey === dateKey || (!b.resolvedTimestamp && s.dateKey === dateKey)) {
-                                let actionText = getTypeConfig(b).action || 'تسوية';
-                                let resImpact = b.mainType === 'behavior' ? 10 : 5;
-                                addDayEventSafe(b.category, { type: 'pos', text: `${actionText}: ${b.text}`, ts: b.resolvedTimestamp || s.timestamp, impact: resImpact });
+                                let conf = getTypeConfig(b);
+                                let actionText = b.resolveStatus === 'success' ? conf.success : conf.fail;
+                                let resImpact = b.resolveStatus === 'success' ? (b.mainType === 'behavior' ? 10 : 5) : -5;
+                                addDayEventSafe(b.category, { type: b.resolveStatus === 'success' ? 'pos' : 'neg', text: `${actionText}: ${b.text}`, ts: b.resolvedTimestamp || s.timestamp, impact: resImpact });
                             }
                         }
                     });
@@ -1608,7 +1718,6 @@
                 if(s.dailyNotes && s.dailyNotes.length > 0) { 
                     s.dailyNotes.forEach(n => { 
                         let mediaHtml = ''; 
-                        // تمت إضافة إمكانية فتح الصورة في Lightbox عند النقر
                         if(n.mediaType === 'image') { mediaHtml = `<div class="w-16 h-16 shrink-0 bg-black/40 rounded-xl overflow-hidden relative cursor-pointer group" onclick="openLightbox('${n.mediaData}')"><img src="${n.mediaData}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"><div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-magnifying-glass-plus text-white text-xs"></i></div></div>`; } 
                         else if(n.mediaType === 'audio') { mediaHtml = `<div class="mt-2"><audio src="${n.mediaData}" controls class="w-full h-7 rounded-lg opacity-90"></audio></div>`; }
                         let habitBadge = ''; if(n.habitId) { const linkedHabit = data.habits.find(h => h.id === n.habitId); if(linkedHabit) habitBadge = `<div class="mb-1"><span class="inline-flex items-center gap-1 text-[9px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-md truncate max-w-[150px]"><i class="fa-solid fa-link text-[8px]"></i> ${escapeHTML(linkedHabit.name)}</span></div>`; }
@@ -1652,28 +1761,66 @@
             if(!document.getElementById('statsView').classList.contains('hidden')) renderAspectsStats();
         }
 
-        function exportNativePrint() {
+        function openPrintModal() {
+            soundFX.tap();
+            document.getElementById('printOptionsModal').classList.remove('hidden');
+        }
+        
+        function closePrintModal() {
+            soundFX.tap();
+            document.getElementById('printOptionsModal').classList.add('hidden');
+        }
+
+        function executePrint() {
+            soundFX.success();
+            closePrintModal();
+            const doStats = document.getElementById('printOptStats').checked;
+            const doNotes = document.getElementById('printOptNotes').checked;
+            const doLog = document.getElementById('printOptLog').checked;
+            
             const printArea = document.getElementById('printArea');
             const dk = getActiveDateKey(); const activeHistory = data.history.find(s => s.dateKey === dk);
             const notes = activeHistory ? (activeHistory.dailyNotes || []) : []; const behaviors = activeHistory ? (activeHistory.behaviors || []) : [];
             
-            let notesHTML = '';
-            if (notes.length === 0) { notesHTML = '<p style="color: #64748b; text-align: center; font-style: italic;">لا توجد توثيقات مدونة لهذا اليوم.</p>'; } else { notes.forEach(n => { 
-                let mediaPrint = '';
-                if(n.mediaType === 'image') { mediaPrint = `<img src="${n.mediaData}" style="width: 100%; max-width: 300px; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; margin-bottom: 8px; display: block;">`; }
-                else if(n.mediaType === 'audio') { mediaPrint = `<div style="padding: 8px; background: #e2e8f0; border-radius: 8px; margin-bottom: 8px; font-size: 12px; color: #475569;">🎙️ ملف صوتي مرفق</div>`; }
-                let habitLinked = n.habitId ? `<span style="display:inline-block; margin-bottom:4px; font-size: 10px; background:#e0e7ff; color:#4338ca; padding:2px 6px; border-radius:4px;">مرتبط بعادة</span><br>` : '';
-                notesHTML += `<div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;">${habitLinked}<span style="font-size: 11px; color: #6366f1; font-weight: bold; display: block; margin-bottom: 4px;">الـوقـت: ${escapeHTML(n.time)}</span>${mediaPrint}<p style="margin: 0; font-size: 14px; color: #1e293b; line-height: 1.6;">${escapeHTML(n.text).replace(/\n/g, '<br>')}</p></div>`; 
-            }); }
+            let htmlContent = `<div style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; padding: 40px; color: #0f172a; direction: rtl;"><div style="text-align: center; border-bottom: 2px solid #e0e7ff; padding-bottom: 20px; margin-bottom: 30px;"><h1 style="color: #4f46e5; margin: 0 0 10px 0; font-size: 28px;">تقرير تطبيق Mastery</h1><p style="color: #64748b; margin: 0; font-size: 14px;">تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p></div>`;
+            
+            if(doStats) {
+                htmlContent += `<h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">الإحصائيات العامة:</h2><table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 14px; text-align: center;"><tr style="background: #f8fafc; color: #334155;"><th style="padding: 12px; border: 1px solid #cbd5e1;">أيام الإنجاز</th><th style="padding: 12px; border: 1px solid #cbd5e1;">دقائق التركيز</th><th style="padding: 12px; border: 1px solid #cbd5e1;">متوسط الإنجاز</th></tr><tr style="background: #ffffff;"><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #4f46e5; font-size: 16px;">${document.getElementById('stat-total-days').innerText}</td><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #e11d48; font-size: 16px;">${document.getElementById('stat-total-focus').innerText}</td><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #059669; font-size: 16px;">${document.getElementById('stat-habit-rate').innerText}</td></tr></table>`;
+            }
 
-            let behaviorsHTML = '';
-            if (behaviors.length === 0) { behaviorsHTML = '<p style="color: #64748b; text-align: center; font-style: italic;">لا توجد إدخالات لهذا اليوم.</p>'; } else { behaviors.forEach(b => { 
-                let conf = getTypeConfig(b);
-                behaviorsHTML += `<div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;"><span style="font-size: 14px; font-weight: bold; color: #1e293b;">${escapeHTML(b.text)}</span><span style="font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 1px solid #cbd5e1; color: #475569;">${conf.text}</span></div>${b.explanation ? `<p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.5;">الشرح: ${escapeHTML(b.explanation)}</p>` : ''}<span style="font-size: 10px; color: #94a3b8; display: block; margin-top: 4px;">الطرح: ${b.createdDate || ''} | الجانب: ${escapeHTML(b.category || '')} ${b.isResolved ? ` | <span style="color:#10b981;">تم في: ${b.resolvedDate}</span>` : ''}</span></div>`; 
-            }); }
+            if(doLog) {
+                let behaviorsHTML = '';
+                if (behaviors.length === 0) { behaviorsHTML = '<p style="color: #64748b; text-align: center; font-style: italic;">لا توجد إدخالات لهذا اليوم.</p>'; } else { behaviors.forEach(b => { 
+                    let conf = getTypeConfig(b);
+                    behaviorsHTML += `<div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;"><span style="font-size: 14px; font-weight: bold; color: #1e293b;">${escapeHTML(b.text)}</span><span style="font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 1px solid #cbd5e1; color: #475569;">${conf.text}</span></div>${b.explanation ? `<p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.5;">الشرح: ${escapeHTML(b.explanation)}</p>` : ''}<span style="font-size: 10px; color: #94a3b8; display: block; margin-top: 4px;">الطرح: ${b.createdDate || ''} | الجانب: ${escapeHTML(b.category || '')} ${b.isResolved ? ` | <span style="color:#10b981;">الحالة: ${b.resolveStatus==='success'?conf.success:conf.fail} (${b.resolvedDate})</span>` : ''}</span></div>`; 
+                }); }
+                htmlContent += `<h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">التدوينات:</h2><div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 40px;">${behaviorsHTML}</div>`;
+            }
 
-            printArea.innerHTML = `<div style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; padding: 40px; color: #0f172a; direction: rtl;"><div style="text-align: center; border-bottom: 2px solid #e0e7ff; padding-bottom: 20px; margin-bottom: 30px;"><h1 style="color: #4f46e5; margin: 0 0 10px 0; font-size: 28px;">تقرير تطبيق Mastery</h1><p style="color: #64748b; margin: 0; font-size: 14px;">تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p></div><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">الإحصائيات العامة:</h2><table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 14px; text-align: center;"><tr style="background: #f8fafc; color: #334155;"><th style="padding: 12px; border: 1px solid #cbd5e1;">أيام الإنجاز</th><th style="padding: 12px; border: 1px solid #cbd5e1;">دقائق التركيز الإجمالية</th><th style="padding: 12px; border: 1px solid #cbd5e1;">متوسط الإنجاز</th></tr><tr style="background: #ffffff;"><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #4f46e5; font-size: 16px;">${document.getElementById('stat-total-days').innerText}</td><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #e11d48; font-size: 16px;">${document.getElementById('stat-total-focus').innerText}</td><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #059669; font-size: 16px;">${document.getElementById('stat-habit-rate').innerText}</td></tr></table><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">التدوينات:</h2><div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 40px;">${behaviorsHTML}</div><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">توثيقات اليوم:</h2><div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">${notesHTML}</div><div style="margin-top: 50px; text-align: left; font-size: 10px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">تم التوليد تلقائياً بواسطة تطبيق Mastery</div></div>`;
-            window.print();
+            if(doNotes) {
+                let notesHTML = '';
+                if (notes.length === 0) { notesHTML = '<p style="color: #64748b; text-align: center; font-style: italic;">لا توجد توثيقات مدونة لهذا اليوم.</p>'; } else { notes.forEach(n => { 
+                    let mediaPrint = '';
+                    if(n.mediaType === 'image') { mediaPrint = `<img src="${n.mediaData}" style="width: 100%; max-width: 300px; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; margin-bottom: 8px; display: block;">`; }
+                    else if(n.mediaType === 'audio') { mediaPrint = `<div style="padding: 8px; background: #e2e8f0; border-radius: 8px; margin-bottom: 8px; font-size: 12px; color: #475569;">🎙️ ملف صوتي مرفق</div>`; }
+                    let habitLinked = n.habitId ? `<span style="display:inline-block; margin-bottom:4px; font-size: 10px; background:#e0e7ff; color:#4338ca; padding:2px 6px; border-radius:4px;">مرتبط بعادة</span><br>` : '';
+                    notesHTML += `<div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;">${habitLinked}<span style="font-size: 11px; color: #6366f1; font-weight: bold; display: block; margin-bottom: 4px;">الـوقـت: ${escapeHTML(n.time)}</span>${mediaPrint}<p style="margin: 0; font-size: 14px; color: #1e293b; line-height: 1.6;">${escapeHTML(n.text).replace(/\n/g, '<br>')}</p></div>`; 
+                }); }
+                htmlContent += `<h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">توثيقات اليوم:</h2><div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">${notesHTML}</div>`;
+            }
+
+            htmlContent += `<div style="margin-top: 50px; text-align: left; font-size: 10px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">تم التوليد تلقائياً بواسطة تطبيق Mastery</div></div>`;
+            
+            printArea.innerHTML = htmlContent;
+            
+            // Wait slightly for DOM to update
+            setTimeout(() => { window.print(); }, 100);
+        }
+
+        function simulateGoogleSync() {
+            soundFX.click();
+            alert("هذه الميزة تتطلب ربط التطبيق بواجهة برمجية حقيقية (Backend أو Google API) لحفظ البيانات سحابياً.\n\nبما أن التطبيق يعمل بشكل محلي حالياً، سيتم محاكاة العملية وإنشاء نسخة احتياطية محلية بصيغة JSON لتحميلها يدوياً.");
+            exportData();
         }
 
         function exportData() { soundFX.tap(); const blob = new Blob([JSON.stringify(data)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `MasteryApp_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); }
@@ -1683,7 +1830,7 @@
         updateMainDateBox();
         renderBehaviors(); 
         renderHabits(); 
-        updateSuggestions(); // جلب الكلمات المفتاحية عند تحميل التطبيق
+        updateSuggestions();
     </script>
 </body>
 </html>
