@@ -15,6 +15,9 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoad()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoad()"></script>
+
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -267,12 +270,17 @@
             <div class="glass-card p-4 sm:p-6 rounded-3xl max-w-2xl mx-auto">
                 <h2 class="text-lg sm:text-xl font-bold mb-4 border-b border-white/10 pb-3"><i class="fa-solid fa-gear"></i> الإعدادات</h2>
                 <div class="space-y-4">
-                    <button onclick="simulateGoogleSync()" class="w-full p-3 rounded-2xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 transition font-bold text-sm text-right flex items-center justify-between shadow">
-                        <span><i class="fa-brands fa-google ml-1"></i> المزامنة مع حساب Google لحفظ التقدم</span>
-                        <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
-                    </button>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="googleSyncBtn" onclick="handleGoogleAuth('backup')" class="w-full p-3 rounded-2xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 transition font-bold text-[11px] sm:text-sm text-center flex items-center justify-center gap-2 shadow">
+                            <span><i class="fa-brands fa-google"></i> رفع إلى Drive</span>
+                        </button>
+                        <button id="googleRestoreBtn" onclick="handleGoogleAuth('restore')" class="w-full p-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 transition font-bold text-[11px] sm:text-sm text-center flex items-center justify-center gap-2 shadow">
+                            <span><i class="fa-solid fa-cloud-arrow-down"></i> استعادة من Drive</span>
+                        </button>
+                    </div>
 
-                    <div class="flex justify-between items-center p-3 glass-card mb-2 rounded-xl border border-white/5">
+                    <div class="flex justify-between items-center p-3 glass-card mb-2 rounded-xl border border-white/5 mt-2">
                         <span class="font-bold text-sm text-indigo-200"><i class="fa-solid fa-calendar-days ml-1"></i> نوع التقويم</span>
                         <button onclick="toggleCalendar()" id="calendarBtn" class="text-xs px-4 py-2 rounded-lg font-bold border transition bg-indigo-500/20 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/40">ميلادي</button>
                     </div>
@@ -282,9 +290,9 @@
                     </button>
                     <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10">
                         <div class="flex-1 flex gap-2">
-                            <button onclick="exportData()" class="flex-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 py-3 rounded-2xl font-bold hover:bg-blue-500/30 transition text-sm"><i class="fa-solid fa-download"></i> تصدير</button>
+                            <button onclick="exportData()" class="flex-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 py-3 rounded-2xl font-bold hover:bg-blue-500/30 transition text-sm"><i class="fa-solid fa-download"></i> التصدير لجهازك</button>
                             <label class="flex-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 py-3 rounded-2xl font-bold hover:bg-emerald-500/30 transition text-center cursor-pointer text-sm flex items-center justify-center gap-1">
-                                <i class="fa-solid fa-upload"></i> استيراد <input type="file" class="hidden" accept=".json" onchange="importData(event)">
+                                <i class="fa-solid fa-upload"></i> استيراد ملف <input type="file" class="hidden" accept=".json" onchange="importData(event)">
                             </label>
                         </div>
                     </div>
@@ -292,12 +300,22 @@
                     <div class="border-t border-white/10 pt-4">
                         <button onclick="resetAllData()" class="w-full p-3 rounded-2xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition font-bold text-sm"><i class="fa-solid fa-triangle-exclamation ml-1"></i> مسح جميع البيانات</button>
                     </div>
+
+                    <div class="glass-card p-4 rounded-3xl mt-6 border-t-4 border-t-indigo-500 text-center relative overflow-hidden bg-gradient-to-b from-indigo-500/5 to-transparent">
+                        <i class="fa-solid fa-award text-indigo-500/20 text-6xl absolute -top-4 -right-2"></i>
+                        <h3 class="font-bold text-indigo-300 mb-3 text-lg relative z-10"><i class="fa-solid fa-circle-info"></i> حول التطبيق</h3>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed relative z-10">
+                            تم بناء وتطوير هذا التطبيق بناءً على فكرة ورؤية إبداعية من<br>
+                            <span class="font-bold text-white text-base block my-2 text-indigo-200">عبدالناصر عارف السميري</span>
+                            لتقديم أداة متكاملة في تتبع العادات، إدارة المشاعر، وتحسين جودة الحياة.
+                        </p>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Lightbox Modal - Z-Index: 110 -->
     <div id="imageLightboxModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center z-[110] p-4 transition-all" onclick="closeLightbox()">
         <img id="lightboxImg" src="" class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl object-contain cursor-zoom-out" onclick="event.stopPropagation(); closeLightbox();">
         <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white/50 hover:text-white bg-black/50 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur transition active:scale-90"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -363,7 +381,6 @@
         </div>
     </div>
 
-    <!-- السجل الشامل للتدوينات -->
     <div id="trackingLogModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[80] p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-2xl shadow-2xl border border-white/10 flex flex-col h-[90vh] animate-fade-in">
              <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
@@ -406,7 +423,6 @@
         </div>
     </div>
     
-    <!-- نافذة الطباعة -->
     <div id="printOptionsModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[90] p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/10 relative animate-fade-in">
             <button onclick="closePrintModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-rose-500 hover:text-white transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
@@ -432,7 +448,6 @@
         </div>
     </div>
 
-    <!-- Z-Index معدل إلى 90 ليكون فوق السجل الشامل -->
     <div id="behaviorTypeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[90] p-4">
         <div class="glass-card p-6 rounded-3xl text-center shadow-2xl max-w-sm w-full border border-white/10 max-h-[90vh] overflow-y-auto no-scrollbar animate-fade-in">
             <h3 id="behaviorModalTitle" class="text-lg font-bold mb-4 text-indigo-300">تصنيف التدوين</h3>
@@ -475,7 +490,6 @@
         </div>
     </div>
 
-    <!-- التفاصيل المطورة مع أزرار الإنجاز والتراجع -->
     <div id="itemDetailModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[80] p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/10 relative animate-fade-in flex flex-col">
             <button onclick="closeItemDetailModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-rose-500 hover:text-white transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
@@ -490,8 +504,7 @@
             </div>
             
             <div id="detailActionArea" class="mb-4 w-full">
-                <!-- سيتم تعبئته بزر التحديث أو التراجع بناءً على النوع -->
-            </div>
+                </div>
 
             <div class="bg-black/30 border border-white/5 rounded-xl p-3 flex-1 overflow-y-auto no-scrollbar max-h-40">
                 <button onclick="document.getElementById('detailExplanationWrapper').classList.toggle('hidden')" class="w-full flex justify-between items-center text-xs text-indigo-300 font-bold active:scale-95 transition">
@@ -510,7 +523,6 @@
         </div>
     </div>
 
-    <!-- نافذة العادات -->
     <div id="habitModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
         <div class="glass-card p-6 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-white/10 no-scrollbar relative animate-fade-in">
             <h3 id="habitModalTitle" class="text-xl font-bold mb-4 border-b border-white/10 pb-2 text-indigo-300"><i class="fa-solid fa-wand-magic-sparkles"></i> إضافة عادة</h3>
@@ -607,6 +619,128 @@
             delete: () => { soundFX.play(300, 'sawtooth', 0.1, 0.05); soundFX.play(250, 'sawtooth', 0.2, 0.05, 100); },
             timerEnd: () => { for(let i=0; i<3; i++) { soundFX.play(880, 'sine', 0.2, 0.08, i * 400); soundFX.play(1108, 'sine', 0.2, 0.08, i * 400); } }
         };
+
+        // --- إعدادات Google Drive API -----------------------------------------
+        // هام: استبدل القيمتين أدناه بالمفاتيح التي استخرجتها من Google Cloud Console
+        const CLIENT_ID = '56018460528-0u064qu9m875ii0is7ej05ct68eeanlv.apps.googleusercontent.com'; 
+        const API_KEY = 'AIzaSyCkPa8Yh3H3BZRULJGaRQ1vQ-LJOc-g0DM';
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+        let pendingGoogleAction = null;
+
+        function gapiLoad() { gapi.load('client', intializeGapiClient); }
+        
+        async function intializeGapiClient() {
+            try {
+                await gapi.client.init({ apiKey: API_KEY, discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'] });
+                gapiInited = true;
+            } catch (err) { console.warn("Google API Init Error:", err); }
+        }
+
+        function gisLoad() {
+            try {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: CLIENT_ID,
+                    scope: SCOPES,
+                    callback: (resp) => {
+                        if (resp.error !== undefined) { throw (resp); }
+                        if (pendingGoogleAction === 'backup') executeGoogleBackup();
+                        else if (pendingGoogleAction === 'restore') executeGoogleRestore();
+                    },
+                });
+                gisInited = true;
+            } catch (err) { console.warn("Google Identity Init Error:", err); }
+        }
+
+        function handleGoogleAuth(action) {
+            soundFX.click();
+            if(CLIENT_ID === 'ضع_هنا_معرف_العميل_الخاص_بك') { alert('يرجى إعداد مفاتيح Google API في الكود أولاً (CLIENT_ID و API_KEY)!'); return; }
+            if (!gapiInited || !gisInited) { alert('جاري تحميل مكتبات جوجل، أو تأكد من اتصالك بالإنترنت. يرجى المحاولة بعد قليل.'); return; }
+            
+            pendingGoogleAction = action;
+            
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({prompt: 'consent'});
+            } else {
+                if (action === 'backup') executeGoogleBackup();
+                else if (action === 'restore') executeGoogleRestore();
+            }
+        }
+
+        async function executeGoogleBackup() {
+            const btn = document.getElementById('googleSyncBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span><i class="fa-solid fa-spinner fa-spin ml-1"></i> جاري الرفع...</span>';
+            
+            try {
+                const fileContent = JSON.stringify(data);
+                const fileBlob = new Blob([fileContent], {type: 'application/json'});
+                const metadata = { 'name': 'MasteryApp_Backup.json', 'mimeType': 'application/json' };
+
+                let fileId = null;
+                const searchResponse = await gapi.client.drive.files.list({ q: "name='MasteryApp_Backup.json' and trashed=false", spaces: 'drive', fields: 'files(id, name)' });
+                if (searchResponse.result.files && searchResponse.result.files.length > 0) { fileId = searchResponse.result.files[0].id; }
+
+                const form = new FormData();
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', fileBlob);
+
+                const url = fileId ? `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart` : 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+                const method = fileId ? 'PATCH' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: new Headers({ 'Authorization': 'Bearer ' + gapi.client.getToken().access_token }),
+                    body: form
+                });
+
+                if (response.ok) {
+                    btn.innerHTML = '<span class="text-emerald-400"><i class="fa-solid fa-check ml-1"></i> تم الرفع بنجاح!</span>';
+                    soundFX.success();
+                    setTimeout(() => { btn.innerHTML = originalText; }, 3000);
+                } else { throw new Error('فشل الرفع'); }
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ أثناء المزامنة. تأكد من اتصالك.');
+                btn.innerHTML = originalText;
+            }
+        }
+
+        async function executeGoogleRestore() {
+            const btn = document.getElementById('googleRestoreBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span><i class="fa-solid fa-spinner fa-spin ml-1"></i> جاري الاستعادة...</span>';
+
+            try {
+                const searchResponse = await gapi.client.drive.files.list({ q: "name='MasteryApp_Backup.json' and trashed=false", spaces: 'drive', fields: 'files(id, name)' });
+                if (searchResponse.result.files && searchResponse.result.files.length > 0) {
+                    const fileId = searchResponse.result.files[0].id;
+                    const fileResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, { headers: new Headers({ 'Authorization': 'Bearer ' + gapi.client.getToken().access_token }) });
+                    
+                    if(fileResponse.ok) {
+                        const importedData = await fileResponse.json();
+                        if(importedData && importedData.habits) {
+                            data = importedData;
+                            saveData();
+                            soundFX.success();
+                            btn.innerHTML = '<span class="text-emerald-400"><i class="fa-solid fa-check ml-1"></i> تمت الاستعادة بنجاح!</span>';
+                            setTimeout(()=> location.reload(), 1500);
+                        } else { throw new Error('البيانات غير صالحة'); }
+                    } else { throw new Error('فشل التحميل'); }
+                } else {
+                    alert('لم يتم العثور على أي نسخة احتياطية محفوظة مسبقاً باسم MasteryApp_Backup.json في حسابك.');
+                    btn.innerHTML = originalText;
+                }
+            } catch(err) {
+                console.error(err);
+                alert('حدث خطأ أثناء الاستعادة. تأكد من وجود الملف في Drive.');
+                btn.innerHTML = originalText;
+            }
+        }
+        // ----------------------------------------------------------------------
 
         let data = JSON.parse(localStorage.getItem('masteryProApp_data')) || { behaviors: [], habits: [], history: [], focusSessions: [], settings: {}, dailyNotes: [] };
         if(data.dailyNotes === undefined) data.dailyNotes = [];
@@ -1068,7 +1202,6 @@
             });
         }
 
-        // --- المتابعة والتنفيذ محدثة بنجاح وفشل مع السبب ---
         function resolveItem(id, isSuccess) {
             soundFX.click();
             let targetItem = null;
@@ -1152,7 +1285,6 @@
             });
         }
 
-        // --- التدوين السريع ---
         function switchEntryTab(tab) {
             soundFX.tap(); currentEntryTab = tab;
             ['behavior', 'idea', 'wish', 'need', 'emotion'].forEach(t => { const btn = document.getElementById('entry-tab-' + t); btn.className = (t === tab) ? 'flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg bg-indigo-500/30 text-indigo-200 transition' : 'flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition'; });
@@ -1300,6 +1432,20 @@
         }
         document.getElementById("behaviorInput").addEventListener("keypress", (e) => { if(e.key === "Enter") submitBehavior(); });
 
+        function updateHabitCard(id) {
+            const hGlobal = data.habits.find(h => h.id === id);
+            if(hGlobal) {
+                const card = document.getElementById('habit-card-' + id);
+                if(card) {
+                    const temp = document.createElement('div');
+                    temp.innerHTML = getHabitCardHTML(hGlobal);
+                    card.replaceWith(temp.firstElementChild);
+                } else {
+                    renderHabits();
+                }
+            }
+        }
+
         function setHabitLevel(id, lvl) { 
             let hState = getOrCreateHabitState(id);
             let hGlobal = data.habits.find(h => h.id === id);
@@ -1307,7 +1453,7 @@
                 hState.currentLevel = hState.currentLevel === lvl ? 0 : lvl; 
                 syncHabitCompletion(id, hState, hGlobal);
                 if (hState.currentLevel > 0) soundFX.success(); else soundFX.tap();
-                renderHabits();
+                updateHabitCard(id); 
             } 
         }
 
@@ -1320,7 +1466,7 @@
                     opt.checked = !opt.checked; 
                     syncHabitCompletion(habitId, hState, hGlobal);
                     if(hState.options.every(o => o.checked)) soundFX.success(); else soundFX.tap();
-                    renderHabits(); 
+                    updateHabitCard(habitId); 
                 } 
             } 
         }
@@ -1332,7 +1478,7 @@
                 hState.currentStepIndex = idx; 
                 syncHabitCompletion(id, hState, hGlobal);
                 if(idx === hGlobal.chainSteps.length - 1) soundFX.success(); else soundFX.tap();
-                renderHabits(); 
+                updateHabitCard(id); 
             } 
         }
 
@@ -1432,7 +1578,6 @@
             if (editingHabitId) { 
                 const index = data.habits.findIndex(x => x.id === editingHabitId); 
                 if (index !== -1) { hData.isFrozen = data.habits[index].isFrozen; hData.pastAchievements = data.habits[index].pastAchievements || []; data.habits[index] = hData; } 
-                // تحديث الحالة النشطة للعادة إن وجدت لضمان بقاء المؤشرات صحيحة
                 const activeHistory = data.history.find(s => s.dateKey === getActiveDateKey());
                 if (activeHistory && activeHistory.habits) {
                     let st = activeHistory.habits.find(h => h.id === editingHabitId);
@@ -1469,7 +1614,7 @@
 
             const bgClass = isCompleted ? 'bg-emerald-500/[0.05] border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-black/40 border-white/5';
             
-            let html = `<div id="habit-card-${hGlobal.id}" class="relative glass-card p-4 rounded-3xl flex flex-col h-full border transition-all duration-500 ${bgClass} habit-card-horizontal">
+            let html = `<div id="habit-card-${hGlobal.id}" class="relative glass-card p-4 rounded-3xl flex flex-col h-full border transition-all duration-300 ${bgClass} habit-card-horizontal">
                 <div class="flex justify-between items-start mb-4 relative z-10">
                     <div class="flex flex-col gap-1.5 w-[80%]">
                         <div class="flex items-center gap-2">
@@ -1520,22 +1665,11 @@
         }
 
         function renderHabits() {
-            // حفظ موضع التمرير الأفقي
-            const scrollContainers = document.querySelectorAll('.habits-scroll-container');
-            let scrolls = [];
-            scrollContainers.forEach(c => scrolls.push(c.scrollLeft));
-
             const container = document.getElementById('habitsList'); container.innerHTML = '';
             const activeHabits = data.habits.filter(h => !h.isFrozen);
             if(!activeHabits.length) return container.innerHTML = `<p class="text-center text-gray-500 py-4">لا توجد عادات نشطة. أضف عادة لتبدأ.</p>`;
             let grouped = {}; activeHabits.forEach(h => { let cat = aspectsConfig[h.category] ? h.category : 'الجانب الشخصي'; if(!grouped[cat]) grouped[cat] = []; grouped[cat].push(h); });
             for(let cat in grouped) { let conf = aspectsConfig[cat] || aspectsConfig['الجانب الشخصي']; let folderHtml = `<div class="${conf.bg} border ${conf.border} p-4 rounded-3xl mb-4 border-r-4"><h3 class="font-bold ${conf.color} mb-4 flex items-center gap-2"><i class="fa-solid ${conf.icon}"></i> ${escapeHTML(cat)}</h3><div class="habits-scroll-container no-scrollbar">`; grouped[cat].forEach(h => { folderHtml += getHabitCardHTML(h); }); container.innerHTML += folderHtml + `</div></div>`; }
-
-            // استعادة موضع التمرير
-            setTimeout(() => {
-                const newContainers = document.querySelectorAll('.habits-scroll-container');
-                newContainers.forEach((c, i) => { if(scrolls[i] !== undefined) c.scrollLeft = scrolls[i]; });
-            }, 0);
         }
 
         function openFreezeModal() {
@@ -1813,14 +1947,7 @@
             
             printArea.innerHTML = htmlContent;
             
-            // Wait slightly for DOM to update
             setTimeout(() => { window.print(); }, 100);
-        }
-
-        function simulateGoogleSync() {
-            soundFX.click();
-            alert("هذه الميزة تتطلب ربط التطبيق بواجهة برمجية حقيقية (Backend أو Google API) لحفظ البيانات سحابياً.\n\nبما أن التطبيق يعمل بشكل محلي حالياً، سيتم محاكاة العملية وإنشاء نسخة احتياطية محلية بصيغة JSON لتحميلها يدوياً.");
-            exportData();
         }
 
         function exportData() { soundFX.tap(); const blob = new Blob([JSON.stringify(data)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `MasteryApp_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); }
