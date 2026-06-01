@@ -128,19 +128,28 @@
             </div>
 
             <div class="glass-card p-4 sm:p-6 rounded-3xl">
-                <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-bolt text-blue-400"></i> التدوين السريع
-                </h2>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-bolt text-blue-400"></i> التدوين السريع
+                    </h2>
+                </div>
                 
                 <div class="flex gap-2 mb-4">
-                    <input type="text" id="behaviorInput" class="flex-1 p-3 glass-input rounded-xl text-sm" placeholder="سجل فكرة، سلوك، أو أمنية...">
+                    <!-- تم ربط الحقل بقائمة الكلمات المفتاحية -->
+                    <input type="text" id="behaviorInput" list="behaviorSuggestions" class="flex-1 p-3 glass-input rounded-xl text-sm" placeholder="سجل فكرة، احتياج، أو شعور...">
+                    <datalist id="behaviorSuggestions"></datalist>
                     <button onclick="submitBehavior()" class="bg-indigo-500/80 text-white px-5 rounded-xl hover:bg-indigo-600 shadow-lg shadow-indigo-500/20 font-bold transition backdrop-blur-sm"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
 
-                <div class="flex bg-black/30 rounded-xl p-1 mb-4 border border-white/5">
-                    <button onclick="switchEntryTab('behavior')" id="entry-tab-behavior" class="flex-1 py-2 text-xs font-bold rounded-lg bg-indigo-500/30 text-indigo-200 transition">السلوكيات</button>
-                    <button onclick="switchEntryTab('idea')" id="entry-tab-idea" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">الأفكار</button>
-                    <button onclick="switchEntryTab('wish')" id="entry-tab-wish" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">الأماني</button>
+                <div class="flex justify-between items-center mb-1 px-1">
+                    <span class="text-[10px] text-indigo-300 flex items-center gap-1 opacity-80"><i class="fa-solid fa-arrows-left-right"></i> اسحب الشريط يميناً ويساراً</span>
+                </div>
+                <div class="flex overflow-x-auto no-scrollbar bg-black/30 rounded-xl p-1 mb-4 border border-white/5 gap-1 shadow-inner relative">
+                    <button onclick="switchEntryTab('behavior')" id="entry-tab-behavior" class="flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg bg-indigo-500/30 text-indigo-200 transition">السلوكيات</button>
+                    <button onclick="switchEntryTab('idea')" id="entry-tab-idea" class="flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">الأفكار</button>
+                    <button onclick="switchEntryTab('wish')" id="entry-tab-wish" class="flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">الأماني</button>
+                    <button onclick="switchEntryTab('need')" id="entry-tab-need" class="flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">الاحتياجات</button>
+                    <button onclick="switchEntryTab('emotion')" id="entry-tab-emotion" class="flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">المشاعر</button>
                 </div>
 
                 <div id="behaviorBars" class="relative pt-1 mb-4 hidden">
@@ -150,7 +159,9 @@
                     </div>
                 </div>
 
-                <ul id="behaviorsList" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1 no-scrollbar"></ul>
+                <ul id="behaviorsList" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1 no-scrollbar mb-4"></ul>
+
+                <button onclick="openTrackingLog()" class="w-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 py-3 rounded-2xl text-sm font-bold hover:bg-indigo-500/20 transition active:scale-95 flex items-center justify-center gap-2"><i class="fa-solid fa-list-check"></i> السجل الشامل ومتابعة التدوينات</button>
             </div>
 
             <button onclick="openNoteModal()" class="w-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-400/20 text-blue-200 py-4 rounded-3xl hover:bg-white/10 transition font-bold text-sm sm:text-base flex justify-center items-center gap-2 backdrop-blur-sm shadow-lg active:scale-95">
@@ -278,7 +289,8 @@
         </div>
     </div>
 
-    <div id="imageLightboxModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center z-[100] p-4 transition-all" onclick="closeLightbox()">
+    <!-- Lightbox Modal - Z-Index: 110 -->
+    <div id="imageLightboxModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center z-[110] p-4 transition-all" onclick="closeLightbox()">
         <img id="lightboxImg" src="" class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl object-contain cursor-zoom-out" onclick="event.stopPropagation(); closeLightbox();">
         <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white/50 hover:text-white bg-black/50 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur transition active:scale-90"><i class="fa-solid fa-xmark text-xl"></i></button>
     </div>
@@ -317,23 +329,17 @@
     <div id="dailyNoteModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[80] p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-md shadow-2xl border border-white/10 flex flex-col max-h-[90vh] animate-fade-in">
             <h3 class="text-xl font-bold mb-4 border-b border-white/10 pb-2 text-blue-300 flex items-center gap-2"><i class="fa-solid fa-camera-retro"></i> يومياتي</h3>
-            
             <div id="dailyNotesList" class="flex flex-col gap-3 mb-4 overflow-y-auto pr-1 no-scrollbar flex-1 min-h-[150px]"></div>
-            
             <div class="mt-auto border-t border-white/10 pt-4 flex flex-col gap-2 relative z-10">
-                <select id="docHabitSelect" class="w-full p-2 glass-input rounded-xl text-xs bg-black/50 text-gray-300 font-bold mb-1">
-                    </select>
-
+                <select id="docHabitSelect" class="w-full p-2 glass-input rounded-xl text-xs bg-black/50 text-gray-300 font-bold mb-1"></select>
                 <div class="flex gap-2 items-stretch">
                     <div id="docPreviewArea" class="hidden relative w-16 h-16 bg-black/50 rounded-xl overflow-hidden shrink-0 border border-white/10">
                         <img id="docImagePreview" class="hidden w-full h-full object-cover">
                         <div id="docAudioPreview" class="hidden w-full h-full flex items-center justify-center bg-rose-500/20 text-rose-300"><i class="fa-solid fa-music"></i></div>
                         <button onclick="clearDocMedia()" class="absolute top-1 right-1 bg-rose-500 text-white w-5 h-5 rounded-full flex items-center justify-center active:scale-90 transition shadow"><i class="fa-solid fa-xmark text-[10px]"></i></button>
                     </div>
-                    
                     <textarea id="dailyNoteInput" class="w-full p-3 glass-input rounded-xl text-sm h-16 leading-relaxed flex-1 resize-none" placeholder="اكتب وصفاً أو تفاصيل..."></textarea>
                 </div>
-                
                 <div class="flex justify-between items-center mt-2">
                     <div class="flex gap-2">
                         <button onclick="document.getElementById('docImageInput').click()" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 flex items-center justify-center text-blue-300 transition active:scale-95 shadow"><i class="fa-solid fa-image text-sm"></i></button>
@@ -349,7 +355,25 @@
         </div>
     </div>
 
-    <div id="infoModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[90] p-4 transition-all">
+    <!-- السجل الشامل للتدوينات -->
+    <div id="trackingLogModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[80] p-4 transition-all">
+        <div class="glass-card p-6 rounded-3xl w-full max-w-2xl shadow-2xl border border-white/10 flex flex-col h-[90vh] animate-fade-in">
+             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+                 <h3 class="text-lg font-bold text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-list-check"></i> السجل الشامل والمتابعة</h3>
+                 <button onclick="closeTrackingLog()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center active:scale-95 transition text-gray-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+             </div>
+             
+             <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 bg-black/30 p-1 rounded-xl border border-white/5 shrink-0 relative shadow-inner">
+                 <button onclick="filterTracking('all')" id="trackFilter-all" class="flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg bg-indigo-500/30 text-indigo-200 transition">الكل</button>
+                 <button onclick="filterTracking('pending')" id="trackFilter-pending" class="flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">قيد الانتظار</button>
+                 <button onclick="filterTracking('resolved')" id="trackFilter-resolved" class="flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition">تمت التسوية</button>
+             </div>
+
+             <div id="trackingLogList" class="flex-1 overflow-y-auto no-scrollbar space-y-3 pr-1"></div>
+        </div>
+    </div>
+
+    <div id="infoModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[95] p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/10 text-center relative animate-fade-in">
             <button onclick="closeInfoModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-rose-500 hover:text-white transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
             <div id="infoModalIcon" class="w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 border"></div>
@@ -366,7 +390,7 @@
         </div>
     </div>
 
-    <div id="freezeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 transition-all">
+    <div id="freezeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[50] p-4 transition-all">
         <div class="glass-card p-6 rounded-3xl w-full max-w-md shadow-2xl border border-white/10 relative animate-fade-in">
             <h3 class="text-lg font-bold mb-4 border-b border-white/10 pb-2 text-indigo-300"><i class="fa-solid fa-snowflake"></i> تجميد وتفعيل العادات</h3>
             <div id="freezeListContainer" class="space-y-2 max-h-72 overflow-y-auto pr-1 no-scrollbar mb-4"></div>
@@ -374,16 +398,17 @@
         </div>
     </div>
 
-    <div id="behaviorTypeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+    <!-- Z-Index معدل إلى 90 ليكون فوق السجل الشامل -->
+    <div id="behaviorTypeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[90] p-4">
         <div class="glass-card p-6 rounded-3xl text-center shadow-2xl max-w-sm w-full border border-white/10 max-h-[90vh] overflow-y-auto no-scrollbar animate-fade-in">
             <h3 id="behaviorModalTitle" class="text-lg font-bold mb-4 text-indigo-300">تصنيف التدوين</h3>
             <div class="mb-4 text-right">
-                <label class="block text-xs text-gray-400 mb-1">نص التدوين</label>
+                <label class="block text-xs text-gray-400 mb-1">النص</label>
                 <input type="text" id="modalBehaviorText" class="w-full p-3 glass-input rounded-xl text-sm font-bold text-white mb-2">
             </div>
             <div class="mb-4 text-right">
-                <label class="block text-xs text-gray-400 mb-1">شرح أو تعريف (اختياري)</label>
-                <textarea id="modalExplanation" class="w-full p-3 glass-input rounded-xl text-sm h-20 leading-relaxed" placeholder="اكتب تفاصيل أكثر..."></textarea>
+                <label class="block text-xs text-gray-400 mb-1">شرح أو تفاصيل (اختياري)</label>
+                <textarea id="modalExplanation" class="w-full p-3 glass-input rounded-xl text-sm h-16 leading-relaxed" placeholder="اكتب تفاصيل أكثر..."></textarea>
             </div>
             <div class="mb-4 text-right">
                 <label class="block text-xs text-gray-400 mb-1">في أي جانب يندرج؟</label>
@@ -400,8 +425,12 @@
             </div>
             <div class="grid grid-cols-3 gap-2 mb-4 border-t border-white/10 pt-4">
                 <button onclick="setTempMainType('idea')" id="typeBtn-idea" class="py-2 rounded-xl border border-white/10 text-xs font-bold hover:bg-white/10 text-gray-300 transition active:scale-95"><i class="fa-solid fa-lightbulb text-yellow-400 mb-1 block"></i> فكرة</button>
-                <button onclick="setTempMainType('wish')" id="typeBtn-wish" class="py-2 rounded-xl border border-white/10 text-xs font-bold hover:bg-white/10 text-gray-300 transition active:scale-95"><i class="fa-solid fa-star text-purple-400 mb-1 block"></i> أمنية</button>
-                <button onclick="setTempMainType('behavior')" id="typeBtn-behavior" class="py-2 rounded-xl border border-indigo-500/50 bg-indigo-500/20 text-xs font-bold text-indigo-300 transition active:scale-95"><i class="fa-solid fa-person-running mb-1 block"></i> سلوك</button>
+                <button onclick="setTempMainType('wish')" id="typeBtn-wish" class="py-2 rounded-xl border border-white/10 text-xs font-bold hover:bg-white/10 text-gray-300 transition active:scale-95"><i class="fa-solid fa-wand-magic-sparkles text-purple-400 mb-1 block"></i> أمنية</button>
+                <button onclick="setTempMainType('behavior')" id="typeBtn-behavior" class="py-2 rounded-xl border border-indigo-500/50 bg-indigo-500/20 text-indigo-300 text-xs font-bold transition active:scale-95"><i class="fa-solid fa-person-running mb-1 block"></i> سلوك</button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <button onclick="setTempMainType('need')" id="typeBtn-need" class="py-2 rounded-xl border border-white/10 text-xs font-bold hover:bg-white/10 text-gray-300 transition active:scale-95"><i class="fa-solid fa-hands-holding text-orange-400 mb-1 block"></i> احتياج</button>
+                <button onclick="setTempMainType('emotion')" id="typeBtn-emotion" class="py-2 rounded-xl border border-white/10 text-xs font-bold hover:bg-white/10 text-gray-300 transition active:scale-95"><i class="fa-solid fa-face-smile-beam text-pink-400 mb-1 block"></i> شعور</button>
             </div>
             <div id="behaviorSubTypes" class="flex gap-3 mt-2">
                 <button onclick="saveBehavior('positive')" class="flex-1 bg-emerald-500/80 text-white py-3 rounded-xl hover:bg-emerald-600 font-bold border border-emerald-400/50 text-sm active:scale-95"><i class="fa-solid fa-thumbs-up"></i> إيجابي</button>
@@ -412,17 +441,27 @@
         </div>
     </div>
 
-    <div id="itemDetailModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[80] p-4">
-        <div class="glass-card p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/10 relative animate-fade-in">
+    <!-- التفاصيل المطورة مع أزرار الإنجاز والتراجع -->
+    <div id="itemDetailModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[80] p-4 transition-all">
+        <div class="glass-card p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/10 relative animate-fade-in flex flex-col">
             <button onclick="closeItemDetailModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-rose-500 hover:text-white transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
             <button id="detailFavoriteBtn" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-xl transition hover:scale-110 active:scale-90"></button>
-            <div id="detailIcon" class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border mt-2"></div>
-            <h3 id="detailTitle" class="text-lg font-bold mb-2 text-white text-center"></h3>
-            <div class="text-center mb-4"><span id="detailCategory" class="text-[10px] px-2 py-1 rounded-md bg-black/40 border border-white/10 text-gray-300"></span></div>
             
-            <div class="bg-black/30 border border-white/5 rounded-xl p-3">
+            <div id="detailIcon" class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 border mt-2"></div>
+            <h3 id="detailTitle" class="text-lg font-bold mb-1 text-white text-center leading-snug"></h3>
+            
+            <div class="flex justify-center gap-2 mb-4 text-[10px]">
+                <span id="detailCategory" class="px-2 py-1 rounded-md bg-black/40 border border-white/10 text-gray-300"></span>
+                <span id="detailCreationDate" class="px-2 py-1 rounded-md bg-black/40 border border-white/10 text-gray-300 font-mono"></span>
+            </div>
+            
+            <div id="detailActionArea" class="mb-4 w-full">
+                <!-- سيتم تعبئته بزر التحديث أو التراجع بناءً على النوع -->
+            </div>
+
+            <div class="bg-black/30 border border-white/5 rounded-xl p-3 flex-1 overflow-y-auto no-scrollbar max-h-40">
                 <button onclick="document.getElementById('detailExplanationWrapper').classList.toggle('hidden')" class="w-full flex justify-between items-center text-xs text-indigo-300 font-bold active:scale-95 transition">
-                    <span><i class="fa-solid fa-circle-info ml-1"></i> إظهار/إخفاء الشرح والتعريف</span>
+                    <span><i class="fa-solid fa-circle-info ml-1"></i> الشرح والتفاصيل</span>
                     <i class="fa-solid fa-chevron-down"></i>
                 </button>
                 <div id="detailExplanationWrapper" class="hidden mt-3 pt-3 border-t border-white/10">
@@ -430,13 +469,14 @@
                 </div>
             </div>
 
-            <div class="flex justify-center gap-3 mt-5 pt-5 border-t border-white/10">
+            <div class="flex justify-center gap-3 mt-4 pt-4 border-t border-white/10">
                 <button id="detailEditBtn" class="flex-1 px-4 py-2 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold text-sm hover:bg-indigo-500/40 transition flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-pen"></i> تعديل</button>
                 <button id="detailDeleteBtn" class="flex-1 px-4 py-2 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold text-sm hover:bg-rose-500/40 transition flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-trash"></i> حذف</button>
             </div>
         </div>
     </div>
 
+    <!-- نافذة العادات -->
     <div id="habitModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
         <div class="glass-card p-6 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-white/10 no-scrollbar relative animate-fade-in">
             <h3 id="habitModalTitle" class="text-xl font-bold mb-4 border-b border-white/10 pb-2 text-indigo-300"><i class="fa-solid fa-wand-magic-sparkles"></i> إضافة عادة</h3>
@@ -554,13 +594,14 @@
         let historyDays = [];
         let editingHabitId = null; 
         let editingBehaviorId = null; 
+        let currentLogFilter = 'all';
 
         let mediaRecorder;
         let audioChunks = [];
         let isRecording = false;
         let currentDocMedia = { type: null, data: null };
 
-        function saveData() { localStorage.setItem('masteryProApp_data', JSON.stringify(data)); }
+        function saveData() { localStorage.setItem('masteryProApp_data', JSON.stringify(data)); updateSuggestions(); }
 
         function getActiveDateKey() {
             return new Date(activeAppDate).toLocaleDateString('en-US');
@@ -577,6 +618,41 @@
             return h;
         }
 
+        // تحديث الكلمات المفتاحية
+        function updateSuggestions() {
+            const list = document.getElementById('behaviorSuggestions');
+            if(!list) return;
+            const uniqueTexts = new Set();
+            data.history.forEach(s => {
+                (s.behaviors || []).forEach(b => {
+                    if(b.text && b.text.trim().length > 0) uniqueTexts.add(b.text.trim());
+                });
+            });
+            list.innerHTML = '';
+            uniqueTexts.forEach(text => {
+                list.innerHTML += `<option value="${escapeHTML(text)}">`;
+            });
+        }
+
+        // --- دوال الأنواع للتنسيقات ---
+        function getTypeConfig(b) {
+            if (b.mainType === 'idea') return { text: 'فكرة', color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500', borderR: 'border-r-yellow-500', icon: 'fa-lightbulb', action: 'نُفذت' };
+            if (b.mainType === 'wish') return { text: 'أمنية', color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500', borderR: 'border-r-purple-500', icon: 'fa-wand-magic-sparkles', action: 'تحقق' };
+            if (b.mainType === 'need') return { text: 'احتياج', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500', borderR: 'border-r-orange-500', icon: 'fa-hands-holding', action: 'سُدد' };
+            if (b.mainType === 'emotion') return { text: 'شعور', color: 'text-pink-400', bg: 'bg-pink-500/10', border: 'border-pink-500', borderR: 'border-r-pink-500', icon: 'fa-face-smile-beam', action: null };
+            if (b.type === 'positive') return { text: 'سلوك إيجابي', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500', borderR: 'border-r-emerald-500', icon: 'fa-thumbs-up', action: null };
+            return { text: 'سلوك سلبي', color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500', borderR: 'border-r-rose-500', icon: 'fa-thumbs-down', action: 'صُحح' };
+        }
+
+        function findBehaviorAndSession(id) {
+            for(let s of data.history) {
+                let b = (s.behaviors||[]).find(x => x.id === id);
+                if(b) return { session: s, behavior: b };
+            }
+            return { session: null, behavior: null };
+        }
+
+        // --- الجدولة والحفظ ---
         function getOrCreateHabitState(habitId) {
             const hGlobal = data.habits.find(h => h.id === habitId);
             if (!hGlobal) return null;
@@ -850,13 +926,11 @@
             });
         }
 
-        // التوثيقات (الصور والصوتيات)
         function openLightbox(src) {
             soundFX.click();
             document.getElementById('lightboxImg').src = src;
             document.getElementById('imageLightboxModal').classList.remove('hidden');
         }
-
         function closeLightbox() {
             soundFX.tap();
             document.getElementById('imageLightboxModal').classList.add('hidden');
@@ -880,10 +954,7 @@
                     mediaRecorder.onstop = () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                         const reader = new FileReader();
-                        reader.onloadend = () => {
-                            currentDocMedia = { type: 'audio', data: reader.result };
-                            showDocPreview();
-                        };
+                        reader.onloadend = () => { currentDocMedia = { type: 'audio', data: reader.result }; showDocPreview(); };
                         reader.readAsDataURL(audioBlob);
                         stream.getTracks().forEach(t => t.stop());
                     };
@@ -892,9 +963,7 @@
                     btn.innerHTML = '<i class="fa-solid fa-stop text-sm"></i>';
                     btn.classList.remove('bg-white/5', 'text-rose-300');
                     btn.classList.add('bg-rose-500', 'text-white', 'animate-pulse');
-                } catch(err) {
-                    alert('عذراً، لم نتمكن من الوصول للمايكروفون. يرجى التحقق من الصلاحيات.');
-                }
+                } catch(err) { alert('عذراً، لم نتمكن من الوصول للمايكروفون.'); }
             }
         }
 
@@ -905,18 +974,11 @@
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 800;
-                    let size = Math.min(img.width, img.height);
-                    let sx = (img.width - size) / 2;
-                    let sy = (img.height - size) / 2;
-                    
-                    canvas.width = MAX_SIZE; canvas.height = MAX_SIZE;
-                    const ctx = canvas.getContext('2d');
+                    const canvas = document.createElement('canvas'); const MAX_SIZE = 800;
+                    let size = Math.min(img.width, img.height); let sx = (img.width - size) / 2; let sy = (img.height - size) / 2;
+                    canvas.width = MAX_SIZE; canvas.height = MAX_SIZE; const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, sx, sy, size, size, 0, 0, MAX_SIZE, MAX_SIZE);
-                    
-                    currentDocMedia = { type: 'image', data: canvas.toDataURL('image/jpeg', 0.8) };
-                    showDocPreview();
+                    currentDocMedia = { type: 'image', data: canvas.toDataURL('image/jpeg', 0.8) }; showDocPreview();
                 };
                 img.src = e.target.result;
             };
@@ -924,78 +986,36 @@
         }
 
         function showDocPreview() {
-            const area = document.getElementById('docPreviewArea');
-            const img = document.getElementById('docImagePreview');
-            const aud = document.getElementById('docAudioPreview');
-            area.classList.remove('hidden');
-            img.classList.add('hidden'); aud.classList.add('hidden');
-            
-            if (currentDocMedia.type === 'image') {
-                img.src = currentDocMedia.data;
-                img.classList.remove('hidden');
-            } else if (currentDocMedia.type === 'audio') {
-                aud.classList.remove('hidden');
-            }
+            const area = document.getElementById('docPreviewArea'); const img = document.getElementById('docImagePreview'); const aud = document.getElementById('docAudioPreview');
+            area.classList.remove('hidden'); img.classList.add('hidden'); aud.classList.add('hidden');
+            if (currentDocMedia.type === 'image') { img.src = currentDocMedia.data; img.classList.remove('hidden'); } else if (currentDocMedia.type === 'audio') { aud.classList.remove('hidden'); }
         }
 
-        function clearDocMedia() {
-            soundFX.tap();
-            currentDocMedia = { type: null, data: null };
-            document.getElementById('docPreviewArea').classList.add('hidden');
-            document.getElementById('docImageInput').value = '';
-        }
+        function clearDocMedia() { soundFX.tap(); currentDocMedia = { type: null, data: null }; document.getElementById('docPreviewArea').classList.add('hidden'); document.getElementById('docImageInput').value = ''; }
 
         function openNoteModal() { 
             soundFX.tap(); 
-            // تعبئة العادات المتاحة لربطها بالتوثيق
-            const select = document.getElementById('docHabitSelect');
-            select.innerHTML = '<option value="">-- ربط التوثيق بعادة (اختياري) --</option>';
-            data.habits.forEach(h => {
-                if(!h.isFrozen) select.innerHTML += `<option value="${h.id}">${escapeHTML(h.name)}</option>`;
-            });
-
-            renderDailyNotes(); 
-            document.getElementById('dailyNoteModal').classList.remove('hidden'); 
+            const select = document.getElementById('docHabitSelect'); select.innerHTML = '<option value="">-- ربط التوثيق بعادة (اختياري) --</option>';
+            data.habits.forEach(h => { if(!h.isFrozen) select.innerHTML += `<option value="${h.id}">${escapeHTML(h.name)}</option>`; });
+            renderDailyNotes(); document.getElementById('dailyNoteModal').classList.remove('hidden'); 
         }
 
-        function closeNoteModal() { 
-            soundFX.tap(); 
-            document.getElementById('dailyNoteModal').classList.add('hidden'); 
-        }
+        function closeNoteModal() { soundFX.tap(); document.getElementById('dailyNoteModal').classList.add('hidden'); }
         
         function saveDailyNote() {
-            const input = document.getElementById('dailyNoteInput'); 
-            const text = input.value.trim(); 
+            const input = document.getElementById('dailyNoteInput'); const text = input.value.trim(); 
             if(!text && !currentDocMedia.type) return;
-
             const habitId = document.getElementById('docHabitSelect').value;
-
-            const newN = { 
-                id: Date.now(), 
-                text: text, 
-                mediaType: currentDocMedia.type,
-                mediaData: currentDocMedia.data,
-                habitId: habitId ? parseInt(habitId) : null,
-                time: new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'}) 
-            };
-            
-            const activeHistory = ensureHistoryExists();
-            if(!activeHistory.dailyNotes) activeHistory.dailyNotes = []; 
-            activeHistory.dailyNotes.unshift(newN); 
-            saveData(); 
-            
-            input.value = ''; 
-            document.getElementById('docHabitSelect').value = '';
-            clearDocMedia();
-            renderDailyNotes(); 
-            soundFX.success();
+            const newN = { id: Date.now(), text: text, mediaType: currentDocMedia.type, mediaData: currentDocMedia.data, habitId: habitId ? parseInt(habitId) : null, time: new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'}) };
+            const activeHistory = ensureHistoryExists(); if(!activeHistory.dailyNotes) activeHistory.dailyNotes = []; 
+            activeHistory.dailyNotes.unshift(newN); saveData(); 
+            input.value = ''; document.getElementById('docHabitSelect').value = ''; clearDocMedia(); renderDailyNotes(); soundFX.success();
         }
 
         function deleteDailyNote(index) {
             if(!confirm('حذف التوثيق نهائياً؟')) return;
             const dk = getActiveDateKey(); const activeHistory = data.history.find(s => s.dateKey === dk);
-            if(activeHistory && activeHistory.dailyNotes) activeHistory.dailyNotes.splice(index, 1); 
-            else data.dailyNotes.splice(index, 1);
+            if(activeHistory && activeHistory.dailyNotes) activeHistory.dailyNotes.splice(index, 1); else data.dailyNotes.splice(index, 1);
             saveData(); renderDailyNotes(); soundFX.delete();
         }
 
@@ -1003,44 +1023,90 @@
             const container = document.getElementById('dailyNotesList'); container.innerHTML = '';
             const dk = getActiveDateKey(); const activeHistory = data.history.find(s => s.dateKey === dk);
             const items = activeHistory ? (activeHistory.dailyNotes || []) : [];
-            
             if(items.length === 0) return container.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-gray-500 opacity-50 py-10"><i class="fa-solid fa-camera-retro text-3xl mb-3"></i><p class="text-xs">لا توجد توثيقات. شارك يومياتك!</p></div>';
-            
             items.forEach((n, idx) => { 
                 let mediaHtml = '';
-                if(n.mediaType === 'image') {
-                    mediaHtml = `<div class="w-16 h-16 sm:w-20 sm:h-20 shrink-0 bg-black/40 rounded-xl overflow-hidden relative cursor-pointer group" onclick="openLightbox('${n.mediaData}')">
-                        <img src="${n.mediaData}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-magnifying-glass-plus text-white text-xs"></i></div>
-                    </div>`;
-                }
-
+                if(n.mediaType === 'image') { mediaHtml = `<div class="w-16 h-16 sm:w-20 sm:h-20 shrink-0 bg-black/40 rounded-xl overflow-hidden relative cursor-pointer group" onclick="openLightbox('${n.mediaData}')"><img src="${n.mediaData}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"><div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-magnifying-glass-plus text-white text-xs"></i></div></div>`; }
                 let habitBadge = '';
-                if(n.habitId) {
-                    const linkedHabit = data.habits.find(h => h.id === n.habitId);
-                    if(linkedHabit) habitBadge = `<div class="mb-1.5"><span class="inline-flex items-center gap-1 text-[9px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-md truncate max-w-[150px]"><i class="fa-solid fa-link text-[8px]"></i> ${escapeHTML(linkedHabit.name)}</span></div>`;
-                }
-
-                container.innerHTML += `<div class="glass-card rounded-2xl border border-white/10 shadow-sm p-3 animate-fade-in flex gap-3 items-start">
-                    ${mediaHtml}
-                    <div class="flex-1 min-w-0 flex flex-col justify-between h-full">
-                        <div>
-                            ${habitBadge}
-                            ${n.text ? `<p class="text-xs sm:text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">${escapeHTML(n.text)}</p>` : ''}
-                            ${n.mediaType === 'audio' ? `<div class="mt-2"><audio src="${n.mediaData}" controls class="w-full h-7 rounded-lg opacity-90"></audio></div>` : ''}
-                        </div>
-                        <div class="flex justify-between items-center text-[9px] text-gray-500 font-mono mt-3 pt-2 border-t border-white/5">
-                            <span><i class="fa-regular fa-clock mr-1"></i> ${escapeHTML(n.time)}</span>
-                            <button onclick="deleteDailyNote(${idx})" class="text-rose-400 hover:text-rose-300 transition active:scale-90 px-2 py-1 rounded hover:bg-rose-500/10"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                </div>`; 
+                if(n.habitId) { const linkedHabit = data.habits.find(h => h.id === n.habitId); if(linkedHabit) habitBadge = `<div class="mb-1.5"><span class="inline-flex items-center gap-1 text-[9px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-md truncate max-w-[150px]"><i class="fa-solid fa-link text-[8px]"></i> ${escapeHTML(linkedHabit.name)}</span></div>`; }
+                container.innerHTML += `<div class="glass-card rounded-2xl border border-white/10 shadow-sm p-3 animate-fade-in flex gap-3 items-start">${mediaHtml}<div class="flex-1 min-w-0 flex flex-col justify-between h-full"><div>${habitBadge}${n.text ? `<p class="text-xs sm:text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">${escapeHTML(n.text)}</p>` : ''}${n.mediaType === 'audio' ? `<div class="mt-2"><audio src="${n.mediaData}" controls class="w-full h-7 rounded-lg opacity-90"></audio></div>` : ''}</div><div class="flex justify-between items-center text-[9px] text-gray-500 font-mono mt-3 pt-2 border-t border-white/5"><span><i class="fa-regular fa-clock mr-1"></i> ${escapeHTML(n.time)}</span><button onclick="deleteDailyNote(${idx})" class="text-rose-400 hover:text-rose-300 transition active:scale-90 px-2 py-1 rounded hover:bg-rose-500/10"><i class="fa-solid fa-trash"></i></button></div></div></div>`; 
             });
         }
 
+        // --- المتابعة والتنفيذ ---
+        function resolveItem(id) {
+            soundFX.success();
+            let targetItem = null;
+            for(let s of data.history) { let b = (s.behaviors||[]).find(x => x.id === id); if(b) { targetItem = b; break; } }
+            if(targetItem) {
+                targetItem.isResolved = true;
+                targetItem.resolvedDate = new Date().toLocaleDateString('ar-SA', {year:'numeric', month:'short', day:'numeric'});
+                targetItem.resolvedTimestamp = Date.now();
+                saveData(); renderBehaviors();
+                if(!document.getElementById('trackingLogModal').classList.contains('hidden')) renderTrackingLog();
+                if(!document.getElementById('itemDetailModal').classList.contains('hidden')) openItemDetail(id);
+                if(!document.getElementById('statsView').classList.contains('hidden')) renderAspectsStats();
+            }
+        }
+
+        // التراجع عن التسوية
+        function unresolveItem(id) {
+            soundFX.tap();
+            let targetItem = null;
+            for(let s of data.history) { let b = (s.behaviors||[]).find(x => x.id === id); if(b) { targetItem = b; break; } }
+            if(targetItem) {
+                targetItem.isResolved = false;
+                targetItem.resolvedDate = null;
+                targetItem.resolvedTimestamp = null;
+                saveData(); renderBehaviors();
+                if(!document.getElementById('trackingLogModal').classList.contains('hidden')) renderTrackingLog();
+                if(!document.getElementById('itemDetailModal').classList.contains('hidden')) openItemDetail(id);
+                if(!document.getElementById('statsView').classList.contains('hidden')) renderAspectsStats();
+            }
+        }
+
+        function openTrackingLog() { soundFX.tap(); renderTrackingLog(); document.getElementById('trackingLogModal').classList.remove('hidden'); }
+        function closeTrackingLog() { soundFX.tap(); document.getElementById('trackingLogModal').classList.add('hidden'); }
+        function filterTracking(type) { 
+            soundFX.tap(); currentLogFilter = type; 
+            ['all', 'pending', 'resolved'].forEach(t => { const btn = document.getElementById('trackFilter-' + t); btn.className = (t === type) ? 'flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg bg-indigo-500/30 text-indigo-200 transition' : 'flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition'; });
+            renderTrackingLog(); 
+        }
+
+        function renderTrackingLog() {
+            const list = document.getElementById('trackingLogList'); list.innerHTML = '';
+            let allItems = [];
+            data.history.forEach(s => { (s.behaviors || []).forEach(b => { allItems.push(b); }); });
+            allItems.sort((a,b) => b.id - a.id);
+
+            let filtered = allItems;
+            if(currentLogFilter === 'pending') filtered = allItems.filter(b => getTypeConfig(b).action && !b.isResolved);
+            if(currentLogFilter === 'resolved') filtered = allItems.filter(b => b.isResolved);
+
+            if(filtered.length === 0) { list.innerHTML = '<div class="flex items-center justify-center h-full"><p class="text-center text-gray-500 text-sm">لا توجد سجلات مطابقة.</p></div>'; return; }
+
+            filtered.forEach(b => {
+                let conf = getTypeConfig(b);
+                let cDate = b.createdDate || new Date(b.id).toLocaleDateString('ar-SA', {year:'numeric', month:'short', day:'numeric'});
+                let actionHtml = '';
+                
+                if(conf.action) {
+                    if(b.isResolved) actionHtml = `<span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20"><i class="fa-solid fa-check"></i> ${conf.action} (${escapeHTML(b.resolvedDate)})</span>`;
+                    else actionHtml = `<button onclick="resolveItem(${b.id}); event.stopPropagation();" class="text-[10px] bg-white/5 border border-white/10 hover:bg-white/10 transition px-2 py-1 rounded text-gray-300 shadow"><i class="fa-regular fa-circle"></i> تحديد: ${conf.action}</button>`;
+                }
+
+                list.innerHTML += `<div onclick="openItemDetail(${b.id})" class="p-3 glass-card rounded-xl border-r-4 ${conf.borderR} border-t-0 border-b-0 border-l-0 mb-3 cursor-pointer hover:bg-white/5 transition flex flex-col gap-2 relative">
+                    <div class="flex justify-between items-start"><div class="font-bold text-xs ${conf.color} flex items-center gap-1.5"><i class="fa-solid ${conf.icon}"></i> ${escapeHTML(conf.text)}</div><div class="z-10 relative">${actionHtml}</div></div>
+                    <div class="text-sm text-gray-200 line-clamp-2">${escapeHTML(b.text)}</div>
+                    <div class="flex justify-between items-center text-[9px] text-gray-500 pt-2 border-t border-white/5 mt-1"><span><i class="fa-regular fa-calendar ml-1"></i>تاريخ الطرح: ${cDate}</span><span>${escapeHTML(b.category || 'الجانب الشخصي')}</span></div>
+                </div>`;
+            });
+        }
+
+        // --- التدوين السريع ---
         function switchEntryTab(tab) {
             soundFX.tap(); currentEntryTab = tab;
-            ['behavior', 'idea', 'wish'].forEach(t => { const btn = document.getElementById('entry-tab-' + t); btn.className = (t === tab) ? 'flex-1 py-2 text-xs font-bold rounded-lg bg-indigo-500/30 text-indigo-200 transition' : 'flex-1 py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition'; });
+            ['behavior', 'idea', 'wish', 'need', 'emotion'].forEach(t => { const btn = document.getElementById('entry-tab-' + t); btn.className = (t === tab) ? 'flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg bg-indigo-500/30 text-indigo-200 transition' : 'flex-1 min-w-[80px] whitespace-nowrap py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition'; });
             renderBehaviors();
         }
 
@@ -1053,8 +1119,7 @@
 
         function editBehaviorBtn(id, event) {
             if(event) event.stopPropagation(); soundFX.tap();
-            const dk = getActiveDateKey(); const activeHistory = data.history.find(s => s.dateKey === dk);
-            let itemList = activeHistory ? (activeHistory.behaviors || []) : data.behaviors; let item = itemList.find(b => b.id === id); if(!item) return;
+            const { behavior: item } = findBehaviorAndSession(id); if(!item) return;
             editingBehaviorId = id; document.getElementById('behaviorModalTitle').innerText = 'تعديل التدوين'; document.getElementById('modalBehaviorText').value = item.text; document.getElementById('modalExplanation').value = item.explanation || ''; document.getElementById('modalBehaviorCategory').value = item.category || 'الجانب الشخصي';
             setTempMainType(item.mainType || 'behavior'); document.getElementById('behaviorTypeModal').classList.remove('hidden');
         }
@@ -1063,7 +1128,7 @@
 
         function setTempMainType(type) {
             soundFX.tap(); tempMainType = type;
-            ['idea', 'wish', 'behavior'].forEach(t => { const btn = document.getElementById('typeBtn-' + t); btn.classList.remove('border-indigo-500/50', 'bg-indigo-500/20', 'text-indigo-300'); btn.classList.add('border-white/10', 'text-gray-300'); });
+            ['idea', 'wish', 'behavior', 'need', 'emotion'].forEach(t => { const btn = document.getElementById('typeBtn-' + t); btn.classList.remove('border-indigo-500/50', 'bg-indigo-500/20', 'text-indigo-300'); btn.classList.add('border-white/10', 'text-gray-300'); });
             const activeBtn = document.getElementById('typeBtn-' + type); activeBtn.classList.remove('border-white/10', 'text-gray-300'); activeBtn.classList.add('border-indigo-500/50', 'bg-indigo-500/20', 'text-indigo-300');
             if (type === 'behavior') { document.getElementById('behaviorSubTypes').classList.remove('hidden'); document.getElementById('saveNonBehaviorBtn').classList.add('hidden'); } else { document.getElementById('behaviorSubTypes').classList.add('hidden'); document.getElementById('saveNonBehaviorBtn').classList.remove('hidden'); }
         }
@@ -1073,23 +1138,33 @@
             const cat = document.getElementById('modalBehaviorCategory').value; const explanation = document.getElementById('modalExplanation').value.trim();
             const activeHistory = ensureHistoryExists();
             if (!activeHistory.behaviors) activeHistory.behaviors = [];
-            let targetList = activeHistory.behaviors;
 
             if (editingBehaviorId) {
-                let item = targetList.find(b => b.id === editingBehaviorId);
-                if (!item) item = data.behaviors.find(b => b.id === editingBehaviorId);
+                const { behavior: item } = findBehaviorAndSession(editingBehaviorId);
                 if (item) { item.text = text; item.mainType = tempMainType; item.type = subType === 'none' ? item.type : subType; item.category = cat; item.explanation = explanation; }
             } else {
-                const newEntry = { id: Date.now(), text: text, mainType: tempMainType, type: subType, category: cat, explanation: explanation, isFavorite: false, time: new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'}) };
-                targetList.unshift(newEntry);
+                const newEntry = { 
+                    id: Date.now(), 
+                    text: text, 
+                    mainType: tempMainType, 
+                    type: subType, 
+                    category: cat, 
+                    explanation: explanation, 
+                    isFavorite: false, 
+                    time: new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'}),
+                    createdDate: new Date().toLocaleDateString('ar-SA', {year: 'numeric', month: 'long', day: 'numeric'}),
+                    isResolved: false,
+                    resolvedDate: null,
+                    resolvedTimestamp: null
+                };
+                activeHistory.behaviors.unshift(newEntry);
             }
-            saveData(); document.getElementById('behaviorInput').value = ''; closeBehaviorModal(); switchEntryTab(tempMainType); soundFX.success();
+            saveData(); document.getElementById('behaviorInput').value = ''; closeBehaviorModal(); switchEntryTab(tempMainType); soundFX.success(); if(!document.getElementById('trackingLogModal').classList.contains('hidden')) renderTrackingLog();
         }
 
         function toggleFavorite(id, event) {
             if(event) event.stopPropagation(); soundFX.tap();
-            const dk = getActiveDateKey(); const activeHistory = data.history.find(s => s.dateKey === dk);
-            let itemList = activeHistory ? (activeHistory.behaviors || []) : data.behaviors; let item = itemList.find(b => b.id === id);
+            const { behavior: item } = findBehaviorAndSession(id);
             if(item) {
                 item.isFavorite = !item.isFavorite; saveData(); renderBehaviors();
                 const modalFavBtn = document.getElementById('detailFavoriteBtn');
@@ -1099,12 +1174,31 @@
 
         function openItemDetail(id) {
             soundFX.click();
-            const dk = getActiveDateKey(); const activeHistory = data.history.find(s => s.dateKey === dk);
-            const itemList = activeHistory ? (activeHistory.behaviors || []) : data.behaviors; const item = itemList.find(b => b.id === id); if(!item) return;
-            document.getElementById('detailTitle').innerText = item.text; document.getElementById('detailCategory').innerText = item.category || 'الجانب الشخصي'; document.getElementById('detailExplanation').innerText = item.explanation || 'لا يوجد شرح مدون.';
+            const { behavior: item } = findBehaviorAndSession(id); if(!item) return;
+            
+            let conf = getTypeConfig(item);
+            let cDate = item.createdDate || new Date(item.id).toLocaleDateString('ar-SA', {year:'numeric', month:'short', day:'numeric'});
+            
+            document.getElementById('detailTitle').innerText = item.text; 
+            document.getElementById('detailCategory').innerText = item.category || 'الجانب الشخصي'; 
+            document.getElementById('detailCreationDate').innerText = `طُرح في: ${cDate}`; 
+            document.getElementById('detailExplanation').innerText = item.explanation || 'لا توجد تفاصيل مدونة.';
             document.getElementById('detailExplanationWrapper').classList.add('hidden');
+            
             const iconContainer = document.getElementById('detailIcon');
-            if (item.mainType === 'idea') { iconContainer.className = 'w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border border-yellow-500/30 bg-yellow-500/20 text-yellow-400 mt-2'; iconContainer.innerHTML = '<i class="fa-solid fa-lightbulb"></i>'; } else if (item.mainType === 'wish') { iconContainer.className = 'w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border border-purple-500/30 bg-purple-500/20 text-purple-400 mt-2'; iconContainer.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i>'; } else { let isPos = item.type === 'positive'; iconContainer.className = `w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border mt-2 ${isPos ? 'border-emerald-500/30 bg-emerald-500/20 text-emerald-400' : 'border-rose-500/30 bg-rose-500/20 text-rose-400'}`; iconContainer.innerHTML = `<i class="fa-solid ${isPos ? 'fa-thumbs-up' : 'fa-thumbs-down'}"></i>`; }
+            iconContainer.className = `w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 border mt-2 ${conf.bg} ${conf.color} ${conf.border.replace('border-', 'border-').replace('/50', '/30')}`;
+            iconContainer.innerHTML = `<i class="fa-solid ${conf.icon}"></i>`;
+            
+            const actionArea = document.getElementById('detailActionArea');
+            if(conf.action) {
+                if(item.isResolved) {
+                    actionArea.innerHTML = `<div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-2.5 rounded-xl text-center text-xs font-bold mx-auto w-[90%] mb-2"><i class="fa-solid fa-check-circle"></i> الحالة: ${conf.action} <br><span class="text-[10px] text-gray-400 mt-1 block">تاريخ التنفيذ: ${escapeHTML(item.resolvedDate)}</span></div>
+                    <button onclick="unresolveItem(${item.id})" class="w-[90%] mx-auto block bg-gray-500/20 border border-gray-500/50 text-gray-400 py-2 rounded-xl text-xs font-bold hover:bg-gray-500/30 active:scale-95 transition shadow"><i class="fa-solid fa-rotate-left"></i> تراجع عن التسوية</button>`;
+                } else {
+                    let colorKey = conf.color.split('-')[1];
+                    actionArea.innerHTML = `<button onclick="resolveItem(${item.id})" class="w-[90%] mx-auto block bg-${colorKey}-500/20 border border-${colorKey}-500/50 text-${colorKey}-400 py-2.5 rounded-xl text-sm font-bold hover:bg-${colorKey}-500/30 active:scale-95 transition shadow"><i class="fa-solid fa-check"></i> تحديد كـ (${conf.action})</button>`;
+                }
+            } else { actionArea.innerHTML = ''; }
             
             const favBtn = document.getElementById('detailFavoriteBtn'); favBtn.onclick = (e) => toggleFavorite(item.id, e);
             favBtn.innerHTML = item.isFavorite ? '<i class="fa-solid fa-star text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"></i>' : '<i class="fa-regular fa-star text-gray-400"></i>';
@@ -1119,12 +1213,12 @@
             const allItems = activeHistory ? (activeHistory.behaviors || []) : [];
             const filteredItems = allItems.filter(item => (item.mainType || 'behavior') === currentEntryTab);
             
-            if (filteredItems.length === 0) list.innerHTML = `<p class="text-center text-gray-500 text-xs py-4">لا يوجد إدخالات في هذا القسم.</p>`;
+            if (filteredItems.length === 0) list.innerHTML = `<p class="text-center text-gray-500 text-xs py-6">لا توجد إدخالات مسجلة.</p>`;
             filteredItems.forEach(b => {
-                let borderClass, bgClass;
-                if (currentEntryTab === 'idea') { borderClass = 'border-yellow-500'; bgClass = 'bg-yellow-500/10'; } else if (currentEntryTab === 'wish') { borderClass = 'border-purple-500'; bgClass = 'bg-purple-500/10'; } else { borderClass = b.type === 'positive' ? 'border-emerald-500' : 'border-rose-500'; bgClass = b.type === 'positive' ? 'bg-emerald-500/10' : 'bg-rose-500/10'; }
+                let conf = getTypeConfig(b);
                 const favIcon = b.isFavorite ? '<i class="fa-solid fa-star text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]"></i>' : '<i class="fa-regular fa-star text-gray-500 hover:text-yellow-400 transition"></i>';
-                list.innerHTML += `<li onclick="openItemDetail(${b.id})" class="cursor-pointer p-3 rounded-xl flex flex-col border-r-4 ${bgClass} border-l-0 border-t-0 border-b-0 ${borderClass} text-sm mb-2 glass-card hover:bg-white/10 transition group active:scale-95"><div class="flex justify-between items-start w-full gap-2"><div class="flex-1 overflow-hidden"><div class="flex items-center gap-2 mb-1"><button onclick="toggleFavorite(${b.id}, event)" class="z-10 focus:outline-none shrink-0">${favIcon}</button><span class="font-bold truncate w-full">${escapeHTML(b.text)}</span></div></div><div class="flex items-center gap-2 shrink-0"><span class="text-[10px] text-gray-500 font-mono">${escapeHTML(b.time)}</span></div></div></li>`;
+                let statusIcon = b.isResolved ? `<i class="fa-solid fa-check-circle text-emerald-400 ml-1 text-[10px]" title="${conf.action}"></i>` : '';
+                list.innerHTML += `<li onclick="openItemDetail(${b.id})" class="cursor-pointer p-3 rounded-xl flex flex-col border-r-4 ${conf.bg} border-l-0 border-t-0 border-b-0 ${conf.borderR} text-sm mb-2 glass-card hover:bg-white/10 transition group active:scale-95"><div class="flex justify-between items-start w-full gap-2"><div class="flex-1 overflow-hidden"><div class="flex items-center gap-2 mb-1"><button onclick="toggleFavorite(${b.id}, event)" class="z-10 focus:outline-none shrink-0">${favIcon}</button><span class="font-bold truncate w-full ${b.isResolved ? 'text-gray-400' : ''}">${statusIcon} ${escapeHTML(b.text)}</span></div></div><div class="flex items-center gap-2 shrink-0"><span class="text-[10px] text-gray-500 font-mono">${escapeHTML(b.time)}</span></div></div></li>`;
             });
 
             allItems.forEach(b => { if ((b.mainType || 'behavior') === 'behavior') { b.type === 'positive' ? p++ : n++; } });
@@ -1134,9 +1228,8 @@
         
         function deleteBehavior(id, event) { 
             if(event) event.stopPropagation(); if(!confirm('حذف هذا التدوين نهائياً؟')) return;
-            const dk = getActiveDateKey(); const activeHistory = data.history.find(s => s.dateKey === dk);
-            if(activeHistory && activeHistory.behaviors) activeHistory.behaviors = activeHistory.behaviors.filter(b => b.id !== id); else data.behaviors = data.behaviors.filter(b => b.id !== id);
-            saveData(); renderBehaviors(); soundFX.delete();
+            const { session, behavior } = findBehaviorAndSession(id);
+            if(session) { session.behaviors = session.behaviors.filter(b => b.id !== id); saveData(); renderBehaviors(); if(!document.getElementById('trackingLogModal').classList.contains('hidden')) renderTrackingLog(); soundFX.delete(); }
         }
         document.getElementById("behaviorInput").addEventListener("keypress", (e) => { if(e.key === "Enter") submitBehavior(); });
 
@@ -1198,7 +1291,7 @@
             const deleteBtn = document.getElementById('deleteHabitBtnModal');
             
             if (editingHabitId) {
-                deleteBtn.classList.remove('hidden'); // إظهار زر الحذف عند التعديل
+                deleteBtn.classList.remove('hidden'); 
                 const h = data.habits.find(x => x.id === editingHabitId);
                 titleEl.innerHTML = '<i class="fa-solid fa-pen"></i> تعديل العادة';
                 document.getElementById('habitName').value = h.name; 
@@ -1214,24 +1307,16 @@
                 } else if(h.type === 'multiple') {
                     const c = document.getElementById('optionsContainer'); c.innerHTML = '';
                     if(h.options && h.options.length) {
-                        h.options.forEach(o => {
-                            const inp = document.createElement('input'); inp.type='text'; inp.className='habit-option w-full p-2 glass-input rounded-lg text-sm mt-2'; inp.value = o.text; c.appendChild(inp);
-                        });
-                    } else {
-                        const inp = document.createElement('input'); inp.type='text'; inp.className='habit-option w-full p-2 glass-input rounded-lg text-sm mt-2'; c.appendChild(inp);
-                    }
+                        h.options.forEach(o => { const inp = document.createElement('input'); inp.type='text'; inp.className='habit-option w-full p-2 glass-input rounded-lg text-sm mt-2'; inp.value = o.text; c.appendChild(inp); });
+                    } else { const inp = document.createElement('input'); inp.type='text'; inp.className='habit-option w-full p-2 glass-input rounded-lg text-sm mt-2'; c.appendChild(inp); }
                 } else if(h.type === 'chain') {
                     const c = document.getElementById('chainOptionsContainer'); c.innerHTML = '';
                     if(h.chainSteps && h.chainSteps.length) {
-                        h.chainSteps.forEach(s => {
-                            const inp = document.createElement('input'); inp.type='text'; inp.className='chain-option w-full p-2 glass-input rounded-lg text-sm mt-2'; inp.value = s; c.appendChild(inp);
-                        });
-                    } else {
-                        const inp = document.createElement('input'); inp.type='text'; inp.className='chain-option w-full p-2 glass-input rounded-lg text-sm mt-2'; c.appendChild(inp);
-                    }
+                        h.chainSteps.forEach(s => { const inp = document.createElement('input'); inp.type='text'; inp.className='chain-option w-full p-2 glass-input rounded-lg text-sm mt-2'; inp.value = s; c.appendChild(inp); });
+                    } else { const inp = document.createElement('input'); inp.type='text'; inp.className='chain-option w-full p-2 glass-input rounded-lg text-sm mt-2'; c.appendChild(inp); }
                 }
             } else {
-                deleteBtn.classList.add('hidden'); // إخفاء زر الحذف عند الإضافة
+                deleteBtn.classList.add('hidden'); 
                 titleEl.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> إضافة عادة';
                 document.getElementById('habitName').value = ''; 
                 document.getElementById('habitDescription').value = ''; 
@@ -1260,44 +1345,25 @@
             let hData = { id: editingHabitId ? editingHabitId : Date.now(), name, description, startDate, category, type, isFrozen: false, pastAchievements: [] };
             
             if(type === 'levels') {
-                hData.levels = [
-                    document.getElementById('level1').value.trim() || 'المستوى 1',
-                    document.getElementById('level2').value.trim() || 'المستوى 2',
-                    document.getElementById('level3').value.trim() || 'المستوى 3'
-                ];
+                hData.levels = [ document.getElementById('level1').value.trim() || 'المستوى 1', document.getElementById('level2').value.trim() || 'المستوى 2', document.getElementById('level3').value.trim() || 'المستوى 3' ];
             } else if(type === 'multiple') {
-                const inputs = document.querySelectorAll('.habit-option');
-                hData.options = [];
+                const inputs = document.querySelectorAll('.habit-option'); hData.options = [];
                 inputs.forEach((inp, idx) => { if(inp.value.trim()) hData.options.push({id: idx, text: inp.value.trim(), checked: false}); });
                 if(hData.options.length === 0) hData.options.push({id: 0, text: 'مهمة 1', checked: false});
             } else if(type === 'chain') {
-                const inputs = document.querySelectorAll('.chain-option');
-                hData.chainSteps = [];
+                const inputs = document.querySelectorAll('.chain-option'); hData.chainSteps = [];
                 inputs.forEach(inp => { if(inp.value.trim()) hData.chainSteps.push(inp.value.trim()); });
                 if(hData.chainSteps.length === 0) hData.chainSteps.push('نقطة 1');
             }
             
             if (editingHabitId) { 
                 const index = data.habits.findIndex(x => x.id === editingHabitId); 
-                if (index !== -1) { 
-                    hData.isFrozen = data.habits[index].isFrozen; 
-                    hData.pastAchievements = data.habits[index].pastAchievements || []; 
-                    data.habits[index] = hData; 
-                } 
-            } else { 
-                data.habits.unshift(hData); 
-            }
+                if (index !== -1) { hData.isFrozen = data.habits[index].isFrozen; hData.pastAchievements = data.habits[index].pastAchievements || []; data.habits[index] = hData; } 
+            } else { data.habits.unshift(hData); }
             saveData(); closeHabitModal(); renderHabits(); soundFX.success();
         }
 
-        // دالة مخصصة لزر الحذف داخل نافذة التعديل
-        function deleteHabitCurrent() {
-            if(editingHabitId) {
-                deleteHabit(editingHabitId);
-                closeHabitModal();
-            }
-        }
-
+        function deleteHabitCurrent() { if(editingHabitId) { deleteHabit(editingHabitId); closeHabitModal(); } }
         function deleteHabit(id) { if(confirm('حذف العادة نهائياً؟')) { data.habits = data.habits.filter(h => h.id !== id); saveData(); renderHabits(); soundFX.delete(); } }
 
         function getHabitCardHTML(hGlobal) {
@@ -1315,7 +1381,6 @@
 
             const bgClass = isCompleted ? 'bg-emerald-500/[0.05] border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-black/40 border-white/5';
             
-            // تم نقل علامة الصح لتكون بجانب الاسم مباشرة لتفادي أي تداخل
             let html = `<div id="habit-card-${hGlobal.id}" class="relative glass-card p-4 rounded-3xl flex flex-col h-full border transition-all duration-500 ${bgClass} habit-card-horizontal">
                 <div class="flex justify-between items-start mb-4 relative z-10">
                     <div class="flex flex-col gap-1.5 w-[80%]">
@@ -1387,26 +1452,14 @@
         function calculateStats() {
             let activeDaysCount = new Set();
             data.history.forEach(s => activeDaysCount.add(s.dateKey));
-            data.habits.forEach(h => {
-                 if(h.pastAchievements) h.pastAchievements.forEach(d => activeDaysCount.add(d));
-            });
+            data.habits.forEach(h => { if(h.pastAchievements) h.pastAchievements.forEach(d => activeDaysCount.add(d)); });
             let totalDays = activeDaysCount.size;
             
             let p = 0, n = 0, tf = 0, ch = 0;
+            data.history.forEach(s => { (s.behaviors||[]).forEach(b => { if((b.mainType || 'behavior') === 'behavior') { b.type === 'positive' ? p++ : n++; } }); });
+            data.habits.forEach(h => { if (h.pastAchievements && h.pastAchievements.length > 0) { ch += h.pastAchievements.length; } });
             
-            data.history.forEach(s => {
-                (s.behaviors||[]).forEach(b => { if((b.mainType || 'behavior') === 'behavior') { b.type === 'positive' ? p++ : n++; } });
-            });
-            
-            data.habits.forEach(h => { 
-                if (h.pastAchievements && h.pastAchievements.length > 0) { 
-                    ch += h.pastAchievements.length; 
-                } 
-            });
-            
-            let th = totalDays * data.habits.filter(h => !h.isFrozen).length;
-            if(th < ch) th = ch;
-
+            let th = totalDays * data.habits.filter(h => !h.isFrozen).length; if(th < ch) th = ch;
             document.getElementById('stat-total-days').innerText = totalDays;
             document.getElementById('stat-habit-rate').innerText = th ? Math.round((ch/th)*100) + '%' : '0%';
             document.getElementById('stat-behavior-ratio').innerHTML = `<span class="text-emerald-400 drop-shadow">${p}</span><span class="text-gray-500 mx-1 font-sans">/</span><span class="text-rose-400 drop-shadow">${n}</span>`;
@@ -1417,25 +1470,29 @@
         function renderAspectsStats() {
             const container = document.getElementById('aspectsOverviewContainer'); container.innerHTML = '';
             let allEvents = {}; for(let cat in aspectsConfig) allEvents[cat] = [];
-            
-            const addEventSafe = (category, eventObj) => {
-                let cat = aspectsConfig[category] ? category : 'الجانب الشخصي';
-                allEvents[cat].push(eventObj);
-            };
+            const addEventSafe = (category, eventObj) => { let cat = aspectsConfig[category] ? category : 'الجانب الشخصي'; allEvents[cat].push(eventObj); };
             
             data.history.forEach(s => {
                 let sTs = s.timestamp || Date.now();
-                (s.behaviors||[]).forEach(b => { if (b.mainType === 'idea' || b.mainType === 'wish') { addEventSafe(b.category, { type: 'pos', text: b.text, ts: b.id || sTs, impact: 2 }); } else { addEventSafe(b.category, { type: b.type === 'positive' ? 'pos' : 'neg', text: b.text, ts: b.id || sTs, impact: b.type === 'positive' ? 5 : -5 }); } });
+                (s.behaviors||[]).forEach(b => { 
+                    // تأثير التسجيل المبدئي
+                    if (b.mainType === 'idea' || b.mainType === 'wish' || b.mainType === 'need' || b.mainType === 'emotion') { 
+                        addEventSafe(b.category, { type: 'pos', text: b.text, ts: b.id || sTs, impact: 2 }); 
+                    } else { 
+                        addEventSafe(b.category, { type: b.type === 'positive' ? 'pos' : 'neg', text: b.text, ts: b.id || sTs, impact: b.type === 'positive' ? 5 : -5 }); 
+                    } 
+
+                    // تأثير التسوية والتنفيذ
+                    if (b.isResolved) {
+                        let rTs = b.resolvedTimestamp || (b.id || sTs) + 1000;
+                        let actionText = getTypeConfig(b).action || 'تسوية';
+                        let resImpact = b.mainType === 'behavior' ? 10 : 5; // تصحيح سلوك سلبي +10، تحقيق أمنية/احتياج +5
+                        addEventSafe(b.category, { type: 'pos', text: `${actionText}: ${b.text}`, ts: rTs, impact: resImpact });
+                    }
+                });
             });
             
-            data.habits.forEach(h => { 
-                if (h.pastAchievements) { 
-                    h.pastAchievements.forEach(dStr => { 
-                        let dObj = new Date(dStr); 
-                        addEventSafe(h.category, { type: 'habit', text: h.name, ts: dObj.getTime(), impact: 15 }); 
-                    }); 
-                } 
-            });
+            data.habits.forEach(h => { if (h.pastAchievements) { h.pastAchievements.forEach(dStr => { let dObj = new Date(dStr); addEventSafe(h.category, { type: 'habit', text: h.name, ts: dObj.getTime(), impact: 15 }); }); } });
             (data.focusSessions || []).forEach(fs => { if(fs.type !== 'راحة') { addEventSafe(fs.category, { type: 'focus', text: fs.task, ts: fs.timestamp, impact: 10 }); } });
 
             for(let cat in aspectsConfig) {
@@ -1447,7 +1504,7 @@
                     <div class="flex justify-between items-center mb-3"><span class="font-bold text-sm flex items-center gap-2 ${conf.color}"><i class="fa-solid ${conf.icon}"></i> ${escapeHTML(cat)}</span><div class="flex items-center gap-2"><span class="text-[10px] bg-black/40 border border-white/5 px-2 py-1 rounded-lg text-gray-300">مستوى ${level}</span><span class="text-xs font-mono font-bold text-indigo-300 w-8 text-left">${currentPct}%</span></div></div>
                     <div class="w-full bg-black/40 rounded-full h-3 flex overflow-hidden shadow-inner relative border border-white/5">`;
                 if(displayEvents.length === 0) { html += `<div class="w-full bg-gray-800/30"></div>`; } else { displayEvents.forEach(ev => { let color = ev.type === 'habit' ? 'bg-blue-500' : ev.type === 'focus' ? 'bg-purple-500' : ev.type === 'pos' ? 'bg-emerald-500' : 'bg-rose-500'; let w = Math.abs(ev.impact); html += `<div style="width: ${w}%" class="${color} border-r border-black/30" title="${escapeHTML(ev.text)} (${ev.impact > 0 ? '+'+ev.impact : ev.impact}%)"></div>`; }); }
-                html += `</div><div class="flex justify-between mt-2 text-[8px] text-gray-500"><span>أحدث التأثيرات الزمنية</span><span class="flex gap-1.5 font-bold"><span class="text-rose-400/80">سلبي -5%</span><span class="text-emerald-400/80">إيجابي / تدوين</span><span class="text-purple-400/80">تركيز +10%</span><span class="text-blue-400/80">عادة +15%</span></span></div></div>`;
+                html += `</div><div class="flex justify-between mt-2 text-[8px] text-gray-500"><span>أحدث التأثيرات الزمنية</span><span class="flex gap-1.5 font-bold"><span class="text-rose-400/80">سلبي -5%</span><span class="text-emerald-400/80">إنجاز وتسوية</span><span class="text-purple-400/80">تركيز +10%</span><span class="text-blue-400/80">عادة +15%</span></span></div></div>`;
                 container.innerHTML += html;
             }
         }
@@ -1490,7 +1547,6 @@
             let sessionsForDay = data.history.filter(s => s.dateKey === dateKey);
             if (sessionsForDay.length === 0) return;
             let dayObj = { sessions: sessionsForDay, timestamp: sessionsForDay[0].timestamp, dateKey: dateKey };
-
             const titleEl = document.getElementById('dayDetailTitle'); const contentEl = document.getElementById('dayDetailContent'); contentEl.innerHTML = '';
             const dayDateStr = escapeHTML(getFormattedDate(dayObj.timestamp, 'short'));
             
@@ -1499,21 +1555,30 @@
                 let dayEvents = {}; for (let cat in aspectsConfig) dayEvents[cat] = [];
                 const addDayEventSafe = (category, eventObj) => { let cat = aspectsConfig[category] ? category : 'الجانب الشخصي'; dayEvents[cat].push(eventObj); };
 
-                dayObj.sessions.forEach(s => {
-                    (s.behaviors||[]).forEach(b => { if (b.mainType === 'idea' || b.mainType === 'wish') { addDayEventSafe(b.category, { type: 'pos', text: b.text, ts: b.id || s.timestamp, impact: 2 }); } else { addDayEventSafe(b.category, { type: b.type === 'positive' ? 'pos' : 'neg', text: b.text, ts: b.id || s.timestamp, impact: b.type === 'positive' ? 5 : -5 }); } });
+                dayObj.sessions.forEach(s => { 
+                    (s.behaviors||[]).forEach(b => { 
+                        if (b.mainType === 'idea' || b.mainType === 'wish' || b.mainType === 'need' || b.mainType === 'emotion') { addDayEventSafe(b.category, { type: 'pos', text: b.text, ts: b.id || s.timestamp, impact: 2 }); } 
+                        else { addDayEventSafe(b.category, { type: b.type === 'positive' ? 'pos' : 'neg', text: b.text, ts: b.id || s.timestamp, impact: b.type === 'positive' ? 5 : -5 }); } 
+                    }); 
                 });
                 
-                data.habits.forEach(h => {
-                    if(h.pastAchievements) {
-                        h.pastAchievements.forEach(dStr => {
-                            if(new Date(dStr).toLocaleDateString('en-US') === dateKey) {
-                                addDayEventSafe(h.category, { type: 'habit', text: h.name, ts: dayObj.timestamp, impact: 15 });
+                // البحث عن التسويات التي تمت في هذا اليوم
+                data.history.forEach(s => {
+                    (s.behaviors||[]).forEach(b => {
+                        if (b.isResolved) {
+                            let rDateKey = b.resolvedTimestamp ? new Date(b.resolvedTimestamp).toLocaleDateString('en-US') : null;
+                            if (rDateKey === dateKey || (!b.resolvedTimestamp && s.dateKey === dateKey)) {
+                                let actionText = getTypeConfig(b).action || 'تسوية';
+                                let resImpact = b.mainType === 'behavior' ? 10 : 5;
+                                addDayEventSafe(b.category, { type: 'pos', text: `${actionText}: ${b.text}`, ts: b.resolvedTimestamp || s.timestamp, impact: resImpact });
                             }
-                        });
-                    }
+                        }
+                    });
                 });
 
+                data.habits.forEach(h => { if(h.pastAchievements) { h.pastAchievements.forEach(dStr => { if(new Date(dStr).toLocaleDateString('en-US') === dateKey) { addDayEventSafe(h.category, { type: 'habit', text: h.name, ts: dayObj.timestamp, impact: 15 }); } }); } });
                 let dayFocus = (data.focusSessions || []).filter(fs => new Date(fs.timestamp).toLocaleDateString('en-US') === dateKey); dayFocus.forEach(fs => { if(fs.type !== 'راحة') { addDayEventSafe(fs.category, { type: 'focus', text: fs.task, ts: fs.timestamp, impact: 10 }); } });
+                
                 let hasData = false;
                 for (let cat in aspectsConfig) {
                     let evs = dayEvents[cat]; if (evs.length === 0) continue; hasData = true; evs.sort((a, b) => a.ts - b.ts); 
@@ -1527,22 +1592,14 @@
                 let allBehaviors = []; dayObj.sessions.forEach(s => allBehaviors = allBehaviors.concat(s.behaviors || []));
                 if(allBehaviors.length === 0) contentEl.innerHTML = '<p class="text-center text-gray-500">لا يوجد تدوينات في هذا اليوم.</p>';
                 allBehaviors.forEach(b => {
-                    let borderClass, bgClass, iconHtml;
-                    if (b.mainType === 'idea') { borderClass = 'border-r-yellow-500'; bgClass = 'bg-yellow-500/10'; iconHtml = '<i class="fa-solid fa-lightbulb text-yellow-400 mr-1"></i>'; } else if (b.mainType === 'wish') { borderClass = 'border-r-purple-500'; bgClass = 'bg-purple-500/10'; iconHtml = '<i class="fa-solid fa-wand-magic-sparkles text-purple-400 mr-1"></i>'; } else { const isPos = b.type === 'positive'; borderClass = isPos ? 'border-r-emerald-500' : 'border-r-rose-500'; bgClass = isPos ? 'bg-emerald-500/10' : 'bg-rose-500/10'; iconHtml = isPos ? '<i class="fa-solid fa-thumbs-up text-emerald-400 mr-1"></i>' : '<i class="fa-solid fa-thumbs-down text-rose-400 mr-1"></i>'; }
-                    contentEl.innerHTML += `<div class="p-3 rounded-xl border-r-4 ${borderClass} ${bgClass} mb-2 flex flex-col justify-between"><div class="flex justify-between items-start mb-1"><div><div class="font-bold text-xs">${iconHtml} ${escapeHTML(b.text)}</div><div class="text-[10px] text-gray-400 mt-1">${escapeHTML(b.category || 'الجانب الشخصي')}</div></div><div class="flex flex-col items-end gap-1 shrink-0">${b.isFavorite ? '<i class="fa-solid fa-star text-[10px] text-yellow-400"></i>' : ''}<span class="text-[10px] text-gray-400">${escapeHTML(b.time || '')}</span></div></div>${b.explanation ? `<div class="mt-2 pt-2 border-t border-white/5 text-[10px] text-gray-300 leading-relaxed"><i class="fa-solid fa-align-right ml-1"></i>${escapeHTML(b.explanation)}</div>` : ''}</div>`;
+                    let conf = getTypeConfig(b);
+                    contentEl.innerHTML += `<div class="p-3 rounded-xl border-r-4 ${conf.borderR} ${conf.bg} mb-2 flex flex-col justify-between"><div class="flex justify-between items-start mb-1"><div><div class="font-bold text-xs ${conf.color}"><i class="fa-solid ${conf.icon} mr-1"></i> ${escapeHTML(b.text)}</div><div class="text-[10px] text-gray-400 mt-1">${escapeHTML(b.category || 'الجانب الشخصي')}</div></div><div class="flex flex-col items-end gap-1 shrink-0">${b.isFavorite ? '<i class="fa-solid fa-star text-[10px] text-yellow-400"></i>' : ''}<span class="text-[10px] text-gray-400">${escapeHTML(b.time || '')}</span></div></div>${b.explanation ? `<div class="mt-2 pt-2 border-t border-white/5 text-[10px] text-gray-300 leading-relaxed"><i class="fa-solid fa-align-right ml-1"></i>${escapeHTML(b.explanation)}</div>` : ''}</div>`;
                 });
             }
             else if(type === 'habits') {
                 titleEl.innerHTML = `<i class="fa-solid fa-list-check text-emerald-400"></i> العادات - ${dayDateStr}`;
                 let html = '';
-                data.habits.forEach(h => { 
-                    if(h.pastAchievements) {
-                        let doneToday = h.pastAchievements.some(dStr => new Date(dStr).toLocaleDateString('en-US') === dateKey);
-                        if(doneToday) {
-                            html += `<div class="flex justify-between p-2 border-b border-white/5 text-xs"><span class="text-gray-200">${escapeHTML(h.name)}</span> <i class="fa-solid fa-circle-check text-emerald-400"></i></div>`;
-                        }
-                    }
-                });
+                data.habits.forEach(h => { if(h.pastAchievements) { let doneToday = h.pastAchievements.some(dStr => new Date(dStr).toLocaleDateString('en-US') === dateKey); if(doneToday) { html += `<div class="flex justify-between p-2 border-b border-white/5 text-xs"><span class="text-gray-200">${escapeHTML(h.name)}</span> <i class="fa-solid fa-circle-check text-emerald-400"></i></div>`; } } });
                 contentEl.innerHTML = html || '<p class="text-center text-gray-500">لا يوجد عادات مسجلة كإنجاز في هذا اليوم.</p>';
             }
             else if(type === 'notes') {
@@ -1550,28 +1607,12 @@
                 let html = ''; let s = dayObj.sessions[0];
                 if(s.dailyNotes && s.dailyNotes.length > 0) { 
                     s.dailyNotes.forEach(n => { 
-                        let mediaHtml = '';
-                        if(n.mediaType === 'image') {
-                            mediaHtml = `<div class="w-16 h-16 shrink-0 bg-black/40 rounded-xl overflow-hidden relative"><img src="${n.mediaData}" class="absolute inset-0 w-full h-full object-cover"></div>`;
-                        } else if(n.mediaType === 'audio') {
-                            mediaHtml = `<div class="mt-2"><audio src="${n.mediaData}" controls class="w-full h-7 rounded-lg opacity-90"></audio></div>`;
-                        }
-                        
-                        let habitBadge = '';
-                        if(n.habitId) {
-                            const linkedHabit = data.habits.find(h => h.id === n.habitId);
-                            if(linkedHabit) habitBadge = `<div class="mb-1"><span class="inline-flex items-center gap-1 text-[9px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-md truncate max-w-[150px]"><i class="fa-solid fa-link text-[8px]"></i> ${escapeHTML(linkedHabit.name)}</span></div>`;
-                        }
-
-                        html += `<div class="glass-card rounded-xl border border-white/10 shadow-sm mb-4 p-3 flex gap-3 items-start">
-                            ${n.mediaType === 'image' ? mediaHtml : ''}
-                            <div class="flex-1 min-w-0">
-                                ${habitBadge}
-                                ${n.text ? `<p class="text-xs text-gray-200 whitespace-pre-wrap leading-relaxed">${escapeHTML(n.text)}</p>` : ''}
-                                ${n.mediaType === 'audio' ? mediaHtml : ''}
-                                <div class="text-[9px] text-gray-400 font-mono mt-2 pt-1 border-t border-white/5"><i class="fa-regular fa-clock mr-1"></i> ${escapeHTML(n.time)}</div>
-                            </div>
-                        </div>`; 
+                        let mediaHtml = ''; 
+                        // تمت إضافة إمكانية فتح الصورة في Lightbox عند النقر
+                        if(n.mediaType === 'image') { mediaHtml = `<div class="w-16 h-16 shrink-0 bg-black/40 rounded-xl overflow-hidden relative cursor-pointer group" onclick="openLightbox('${n.mediaData}')"><img src="${n.mediaData}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"><div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-magnifying-glass-plus text-white text-xs"></i></div></div>`; } 
+                        else if(n.mediaType === 'audio') { mediaHtml = `<div class="mt-2"><audio src="${n.mediaData}" controls class="w-full h-7 rounded-lg opacity-90"></audio></div>`; }
+                        let habitBadge = ''; if(n.habitId) { const linkedHabit = data.habits.find(h => h.id === n.habitId); if(linkedHabit) habitBadge = `<div class="mb-1"><span class="inline-flex items-center gap-1 text-[9px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-md truncate max-w-[150px]"><i class="fa-solid fa-link text-[8px]"></i> ${escapeHTML(linkedHabit.name)}</span></div>`; }
+                        html += `<div class="glass-card rounded-xl border border-white/10 shadow-sm mb-4 p-3 flex gap-3 items-start">${n.mediaType === 'image' ? mediaHtml : ''}<div class="flex-1 min-w-0">${habitBadge}${n.text ? `<p class="text-xs text-gray-200 whitespace-pre-wrap leading-relaxed">${escapeHTML(n.text)}</p>` : ''}${n.mediaType === 'audio' ? mediaHtml : ''}<div class="text-[9px] text-gray-400 font-mono mt-2 pt-1 border-t border-white/5"><i class="fa-regular fa-clock mr-1"></i> ${escapeHTML(n.time)}</div></div></div>`; 
                     }); 
                 } 
                 contentEl.innerHTML = html || '<p class="text-center text-gray-500 py-6">لا توجد توثيقات لهذا اليوم.</p>';
@@ -1626,9 +1667,12 @@
             }); }
 
             let behaviorsHTML = '';
-            if (behaviors.length === 0) { behaviorsHTML = '<p style="color: #64748b; text-align: center; font-style: italic;">لا توجد تدوينات سريعة لهذا اليوم.</p>'; } else { behaviors.forEach(b => { let typeText = b.mainType === 'idea' ? 'فكرة' : (b.mainType === 'wish' ? 'أمنية' : (b.type === 'positive' ? 'سلوك إيجابي' : 'سلوك سلبي')); let typeColor = b.mainType === 'idea' ? '#eab308' : (b.mainType === 'wish' ? '#a855f7' : (b.type === 'positive' ? '#10b981' : '#f43f5e')); behaviorsHTML += `<div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;"><span style="font-size: 14px; font-weight: bold; color: #1e293b;">${escapeHTML(b.text)}</span><span style="font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 1px solid ${typeColor}; color: ${typeColor};">${typeText}</span></div>${b.explanation ? `<p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.5;">الشرح: ${escapeHTML(b.explanation)}</p>` : ''}<span style="font-size: 10px; color: #94a3b8; display: block; margin-top: 4px;">الوقت: ${escapeHTML(b.time || '')} | الجانب: ${escapeHTML(b.category || '')}</span></div>`; }); }
+            if (behaviors.length === 0) { behaviorsHTML = '<p style="color: #64748b; text-align: center; font-style: italic;">لا توجد إدخالات لهذا اليوم.</p>'; } else { behaviors.forEach(b => { 
+                let conf = getTypeConfig(b);
+                behaviorsHTML += `<div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;"><span style="font-size: 14px; font-weight: bold; color: #1e293b;">${escapeHTML(b.text)}</span><span style="font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 1px solid #cbd5e1; color: #475569;">${conf.text}</span></div>${b.explanation ? `<p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.5;">الشرح: ${escapeHTML(b.explanation)}</p>` : ''}<span style="font-size: 10px; color: #94a3b8; display: block; margin-top: 4px;">الطرح: ${b.createdDate || ''} | الجانب: ${escapeHTML(b.category || '')} ${b.isResolved ? ` | <span style="color:#10b981;">تم في: ${b.resolvedDate}</span>` : ''}</span></div>`; 
+            }); }
 
-            printArea.innerHTML = `<div style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; padding: 40px; color: #0f172a; direction: rtl;"><div style="text-align: center; border-bottom: 2px solid #e0e7ff; padding-bottom: 20px; margin-bottom: 30px;"><h1 style="color: #4f46e5; margin: 0 0 10px 0; font-size: 28px;">تقرير تطبيق Mastery</h1><p style="color: #64748b; margin: 0; font-size: 14px;">تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p></div><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">الإحصائيات العامة:</h2><table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 14px; text-align: center;"><tr style="background: #f8fafc; color: #334155;"><th style="padding: 12px; border: 1px solid #cbd5e1;">أيام الإنجاز</th><th style="padding: 12px; border: 1px solid #cbd5e1;">دقائق التركيز الإجمالية</th><th style="padding: 12px; border: 1px solid #cbd5e1;">متوسط الإنجاز</th></tr><tr style="background: #ffffff;"><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #4f46e5; font-size: 16px;">${document.getElementById('stat-total-days').innerText}</td><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #e11d48; font-size: 16px;">${document.getElementById('stat-total-focus').innerText}</td><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #059669; font-size: 16px;">${document.getElementById('stat-habit-rate').innerText}</td></tr></table><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">التدوينات السريعة:</h2><div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 40px;">${behaviorsHTML}</div><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">توثيقات اليوم:</h2><div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">${notesHTML}</div><div style="margin-top: 50px; text-align: left; font-size: 10px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">تم التوليد تلقائياً بواسطة تطبيق Mastery</div></div>`;
+            printArea.innerHTML = `<div style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; padding: 40px; color: #0f172a; direction: rtl;"><div style="text-align: center; border-bottom: 2px solid #e0e7ff; padding-bottom: 20px; margin-bottom: 30px;"><h1 style="color: #4f46e5; margin: 0 0 10px 0; font-size: 28px;">تقرير تطبيق Mastery</h1><p style="color: #64748b; margin: 0; font-size: 14px;">تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p></div><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">الإحصائيات العامة:</h2><table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 14px; text-align: center;"><tr style="background: #f8fafc; color: #334155;"><th style="padding: 12px; border: 1px solid #cbd5e1;">أيام الإنجاز</th><th style="padding: 12px; border: 1px solid #cbd5e1;">دقائق التركيز الإجمالية</th><th style="padding: 12px; border: 1px solid #cbd5e1;">متوسط الإنجاز</th></tr><tr style="background: #ffffff;"><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #4f46e5; font-size: 16px;">${document.getElementById('stat-total-days').innerText}</td><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #e11d48; font-size: 16px;">${document.getElementById('stat-total-focus').innerText}</td><td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #059669; font-size: 16px;">${document.getElementById('stat-habit-rate').innerText}</td></tr></table><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">التدوينات:</h2><div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 40px;">${behaviorsHTML}</div><h2 style="color: #4338ca; font-size: 18px; margin-bottom: 15px; border-right: 4px solid #4f46e5; padding-right: 10px;">توثيقات اليوم:</h2><div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">${notesHTML}</div><div style="margin-top: 50px; text-align: left; font-size: 10px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">تم التوليد تلقائياً بواسطة تطبيق Mastery</div></div>`;
             window.print();
         }
 
@@ -1639,6 +1683,7 @@
         updateMainDateBox();
         renderBehaviors(); 
         renderHabits(); 
+        updateSuggestions(); // جلب الكلمات المفتاحية عند تحميل التطبيق
     </script>
 </body>
 </html>
